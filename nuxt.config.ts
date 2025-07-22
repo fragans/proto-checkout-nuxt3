@@ -4,6 +4,10 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   devServer: { host: '0.0.0.0', port: 3000 },
   modules: [
+    [
+      '@nuxtjs/tailwindcss',
+      { cssPath: ['~/assets/styles/tailwind.css', { injectPosition: 'last' }] },
+    ],
     '@nuxt/eslint',
     '@nuxt/fonts',
     '@nuxt/icon',

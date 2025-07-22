@@ -25,7 +25,9 @@
     "node": "22.17.1"
   },
   "devDependencies": {
+    "@kompasid/colors": "^1.1.0",
     "@kompasid/lit-web-components": "^0.9.13",
-    "@kompasid/ui-library": "1.6.5"
+    "@kompasid/ui-library": "1.6.5",
+    "@nuxtjs/tailwindcss": "^6.14.0"
   }
 }
