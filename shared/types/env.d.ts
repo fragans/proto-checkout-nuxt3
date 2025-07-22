@@ -1,7 +1,6 @@
 declare module 'nuxt/schema' {
   interface PublicRuntimeConfig {
     ENV_MODE: 'local' | 'production' | 'development'
-    API_BASE_ACCOUNT: string
     API_BASE_ACCOUNT_SPA: string
     API_BASE_ACCOUNT_SSR: string
     API_BASE_CDS_SPA: string
