@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-black text-white">
+  <div class="bg-grey-50 text-white text-center h-screen">
     KDP
   </div>
 </template>

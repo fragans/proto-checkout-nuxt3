@@ -13,9 +13,7 @@
           class="flex flex-col z-40 absolute border-grey-30 border-b"
         >
           <div class="flex max-w-3xl mx-auto py-2 text-sm w-full">
-            <!-- <HeaderButtons /> -->
             <HeaderLogo />
-            <!-- <HeaderAuthBar :top-size="getHeightScollTop" /> -->
           </div>
         </UiKompasBar>
 
