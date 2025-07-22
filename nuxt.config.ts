@@ -9,6 +9,16 @@ export default defineNuxtConfig({
     '@nuxt/icon',
     '@pinia/nuxt'
   ],
+  components: [
+    '~/components', {
+      path: '~/pages',
+      pattern: '**/components/**',
+      pathPrefix: false,
+    },
+  ],
+  pages: {
+    pattern: ['**/*.vue', '!**/components/**'],
+  },
   runtimeConfig: {
     public: {
       ENV_MODE: process.env.ENV_MODE,
