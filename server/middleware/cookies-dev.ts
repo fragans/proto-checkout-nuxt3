@@ -11,7 +11,7 @@ export default defineEventHandler((event) => {
     SESSION_DOMAIN,
   } = process.env
 
-  if (ENV_MODE === 'local') {
+  if (ENV_MODE === 'local1') {
     const kantormu = getCookie(event, 'kantormu')
     if (!kantormu) {
       const opts = {

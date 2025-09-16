@@ -9,10 +9,13 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   const cookieOptions = {
     domain: SESSION_DOMAIN,
   }
+  const cookieToken = useCookie<string>('kompas._token', cookieOptions)
+  const cookieRefresh = useCookie<string>('kompas._token_refresh', cookieOptions)
   const kantormu = useCookie<CookieKantormu>('kantormu', cookieOptions)
   
   async function fetchAccessToken(refreshToken: string): Promise<string | null> {
-    console.log('async fetchAccessToken');
+      const isGuest = refreshToken === KOMPAS_REFRESH_GUEST
+      if (isGuest) console.log('using guest refresh')
       try {
         const url = `/api/account/tokens/refresh`
         const { data } = await $fetch<ApiAuthRefreshToken>(
@@ -24,17 +27,19 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
             },
           },
         )
-        console.log('data fetchAccessToken=', data.accessToken.length );
+        console.log('new accessToken length=', data.accessToken.length );
         
         if (data) {
           authStore.setAccessToken(data.accessToken)
           accessToken.value = data.accessToken
+          cookieToken.value = data.accessToken
+          cookieRefresh.value = refreshToken 
           return data.accessToken
         }
         return null
       }
       catch (error) {
-        if (refreshToken === KOMPAS_REFRESH_GUEST) {
+        if (isGuest) {
           console.error('fetch guest token gagal', error)
         }else{
           console.error('fetch new token gagal', error)
@@ -43,6 +48,8 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
       return null
   }
   async function setAsGuest() {
+    console.log('setAsGuest');
+    
     const token = await fetchAccessToken(KOMPAS_REFRESH_GUEST as string)
     if (!token) {
       authStore.setUserGuid('GUEST')

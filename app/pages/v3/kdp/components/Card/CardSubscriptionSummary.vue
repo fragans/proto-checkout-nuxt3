@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="shadow rounded-lg">
     <div class="w-full relative flex">
       <div v-if="!detailProduct.isProductVoucher && detailProduct.isProductVoucherAvailable" class="w-full h-full absolute z-10">
         <img

@@ -23,6 +23,9 @@ useAsyncData(
     const response = await nuxtApp.$apiOrder<ApiResponse<KdpProductDetail, null>>(`/product?id=${$route.query.productId}`)
     if (response.data) { checkoutStore.setDetailProduct(response.data) }
     return response
+  },
+  {
+    server: false
   }
 )
 

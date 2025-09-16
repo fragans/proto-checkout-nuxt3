@@ -9,28 +9,38 @@
  * api fetch that uses credentials
  * when return 401 it will auto retry with new jwt from refresh()
  */
-import type { Pinia } from 'pinia'
-import { storeToRefs } from 'pinia'
+// import type { Pinia } from 'pinia'
+import { storeToRefs, getActivePinia } from 'pinia'
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default defineNuxtPlugin(({ $pinia }) => {
   const {
+    SESSION_DOMAIN,
     API_BASE_ACCOUNT,
     KOMPAS_REFRESH_GUEST,
   } = useRuntimeConfig().public
+
+  const cookieOptions = {
+    domain: SESSION_DOMAIN,
+  }
 
   // here is the base url, related to /server/api
   const baseAccount = '/api/account'
   const baseOrder = '/api/order'
   
-  const _pinia = $pinia as Pinia
+  const _pinia = getActivePinia()
   const authStore = useAuthStore(_pinia)
   const { accessToken, refreshToken, isLoggedIn } = storeToRefs(authStore)
-
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const cookieRefresh = useCookie<string>('kompas._token_refresh', cookieOptions) 
+  const cookieToken = useCookie<string>('kompas._token', cookieOptions)
   let refreshTokenPromise: Promise<ApiAuthRefreshToken | null> | null = null
 
   async function refresh() {
     // Ambil token refresh dengan sesuai skenario
     const pickRefreshToken = isLoggedIn.value && refreshToken.value ? refreshToken.value : KOMPAS_REFRESH_GUEST
+    if (pickRefreshToken === KOMPAS_REFRESH_GUEST) useCookie('kompas._token_refresh', cookieOptions).value = KOMPAS_REFRESH_GUEST
+
     if (!refreshTokenPromise) {
       refreshTokenPromise = (async () => {
         console.log('refreshTokenPromise')
@@ -46,6 +56,7 @@ export default defineNuxtPlugin(({ $pinia }) => {
           console.log('success refresh the token')
           // renew the token cookie value
           accessToken.value = response.data.accessToken
+          cookieToken.value = response.data.accessToken
           if (response) {
             return response
           }
@@ -76,8 +87,8 @@ export default defineNuxtPlugin(({ $pinia }) => {
       baseURL,
       retry: 1,
       retryStatusCodes: [401],
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      onRequest({ request, options }) {
+       
+      onRequest({ options }) {
         const headers = new Headers(options.headers || {})
         headers.set('Authorization', `Bearer ${useCookie('kompas._token').value}`)
         options.headers = headers
@@ -88,7 +99,6 @@ export default defineNuxtPlugin(({ $pinia }) => {
       },
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       onResponseError: async ({ response, options, error }) => {
-        // const { $sentry } = useNuxtApp()
         console.log(`tring to fetch = ${options.baseURL}`)
         console.log(` onResponseError=`, response.status)
 
@@ -136,8 +146,8 @@ export default defineNuxtPlugin(({ $pinia }) => {
    * for cdn fetch doesnt need this apiClient,
    * such as KOMPAS_API_ASSETSJSON_HOST
    *  */
-  const $apiAccount = createApiClient(baseAccount as string)
-  const $apiOrder = createApiClient(baseOrder as string)
+  const $apiAccount = createApiClient(baseAccount)
+  const $apiOrder = createApiClient(baseOrder)
 
   // Expose to useNuxtApp().$api
   return {

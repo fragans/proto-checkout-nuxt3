@@ -24,6 +24,7 @@ export const useAuthStore = defineStore(
     }),
     getters: {
       userActiveSorted(state): SubscriptionItem[] {
+        if (!state.userSubscriptionStatus.active) return []
         return [...state.userSubscriptionStatus.active].sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime())
       },
       isMembershipAvailable(state): boolean {
@@ -31,6 +32,7 @@ export const useAuthStore = defineStore(
         return state.userSubscriptionStatus.active.length !== 0
       },
       isGracePeriod(state): boolean {
+        if (!state.userSubscriptionStatus.gracePeriod) return false
         return state.userSubscriptionStatus.gracePeriod?.length !== 0
       },
       latestMembershipEndDate(state): Date | null {
@@ -58,6 +60,7 @@ export const useAuthStore = defineStore(
         return `${state.userSubscriptionStatus.user.firstName} ${this.userSubscriptionStatus.user.lastName}`.trim()
       },
       getLatestMembershipEndDate (state): Date {
+        if (!state.userSubscriptionStatus.active) return new Date()
         const latestEndDate = [...state.userSubscriptionStatus.active]
           .map(item => new Date(item.endDate))
           .reduce((latest, current) => current > latest ? current : latest)
