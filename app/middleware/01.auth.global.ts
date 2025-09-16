@@ -45,6 +45,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   async function setAsGuest() {
     const token = await fetchAccessToken(KOMPAS_REFRESH_GUEST as string)
     if (!token) {
+      authStore.setUserGuid('GUEST')
       authStore.setRefreshToken(KOMPAS_REFRESH_GUEST as string)
     }
     authStore.setLoggedIn(false)
