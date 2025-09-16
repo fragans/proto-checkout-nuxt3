@@ -1,11 +1,11 @@
-interface SubscriptionItem {
+export interface SubscriptionItem {
     membershipTitle: string
     membershipSlug: string,
     startDate: string,
     endDate: string
  }
 
-interface UserMembership {
+export interface UserMembership {
   user: {
       firstName: string,
       lastName: string,
@@ -22,7 +22,13 @@ interface UserMembership {
   expired?: SubscriptionItem[],
 }
 
-interface ApiUserMembership {
+export type SubscriptionStatus = UserMembership
+
+export interface Membership {
+  gracePeriod: SubscriptionItem[]
+}
+
+export interface ApiUserMembership {
   code: KnownResponseCodes
   data: {
     result: UserMembership

@@ -17,7 +17,7 @@ export default defineNuxtRouteMiddleware( async (to, from) => {
   async function getUserMembership (): Promise<void> {
     
     try {
-      const url = `/api/account/users/membership`
+      const url = `/users/membership`
       const { data } = await nuxtApp.$apiAccount<ApiUserMembership>(
         url,
         {
@@ -39,12 +39,15 @@ export default defineNuxtRouteMiddleware( async (to, from) => {
         useCookie('kompas._subscriptionStatus', cookieSubscription)
       }
     } catch (error) {
-      console.log(error)
+      console.error('getUserMembership error', error)
+      authStore.setLoggedIn(false)
     }
     
 
   }
   if (kantormu.value && refresh.value) {
-    await getUserMembership()
+    await callOnce(() => {
+      getUserMembership()
+    })
   }
 })

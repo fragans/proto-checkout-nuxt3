@@ -20,11 +20,8 @@ export default defineNuxtPlugin(({ $pinia }) => {
     API_BASE_EPAPER_SSR,
     API_BASE_KOMPAS_AI_SSR,
     API_BASE_KOMPAS_AI_SPA,
-    // API_BASE_ACCOUNT_SSR,
-    // API_BASE_ACCOUNT_SPA,
     API_BASE_ACCOUNT,
     API_BASE_SUBS,
-    API_BASE_ORDER,
     KOMPAS_REFRESH_GUEST,
     SESSION_DOMAIN
   } = useRuntimeConfig().public
@@ -32,12 +29,12 @@ export default defineNuxtPlugin(({ $pinia }) => {
     domain: SESSION_DOMAIN
   }
   // here are settings for SPA & SSR base URL
-  const baseAccount = '/api/account' // import.meta.server ? API_BASE_ACCOUNT_SSR : API_BASE_ACCOUNT_SPA
+  const baseAccount = '/api/account'
   const baseEpaper = import.meta.server ? API_BASE_EPAPER_SSR : API_BASE_EPAPER_SPA
   const baseCds = import.meta.server ? API_BASE_CDS_SSR : API_BASE_CDS_SPA
   const baseAi = import.meta.server ? API_BASE_KOMPAS_AI_SSR : API_BASE_KOMPAS_AI_SPA
   const baseSubs = API_BASE_SUBS
-  const baseOrder = API_BASE_ORDER
+  const baseOrder = '/api/order'
   const _pinia = $pinia as Pinia
   const authStore = useAuthStore(_pinia)
   const { accessToken: token, isLoggedIn } = storeToRefs(authStore)
@@ -115,7 +112,12 @@ export default defineNuxtPlugin(({ $pinia }) => {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       onResponseError: async ({ response, options, error }) => {
         // const { $sentry } = useNuxtApp()
-        console.log(`${response.url} onResponseError=`, response.status)
+        console.log(`tring to fetch`)
+        console.log(response);
+        
+        
+        console.log(` onResponseError=`, response.status)
+        console.log({response});
 
         if (response.status === 401) {
           try {

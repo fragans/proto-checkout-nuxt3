@@ -27,9 +27,10 @@ export default defineNuxtConfig({
     public: {
       ENV_MODE: process.env.ENV_MODE,
       SESSION_DOMAIN: process.env.SESSION_DOMAIN,
-      API_BASE_ACCOUNT_SSR: process.env.API_BASE_ACCOUNT_SSR,
-      API_BASE_ACCOUNT_SPA: process.env.API_BASE_ACCOUNT_SPA,
-      KOMPAS_REFRESH_GUEST: process.env.KOMPAS_REFRESH_GUEST
+      API_BASE_ACCOUNT: process.env.API_BASE_ACCOUNT,
+      KOMPAS_REFRESH_GUEST: process.env.KOMPAS_REFRESH_GUEST,
+      KOMPAS_GTM_ID: process.env.KOMPAS_GTM_ID,
+      CHECKOUT_JSON_URL: process.env.CHECKOUT_JSON_URL 
     }
   }
 })

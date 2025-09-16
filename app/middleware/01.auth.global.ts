@@ -44,12 +44,11 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
       return null
   }
   async function setAsGuest() {
-    authStore.setGuest()
     const token = await fetchAccessToken(KOMPAS_REFRESH_GUEST as string)
     if (!token) {
       authStore.setRefreshToken(KOMPAS_REFRESH_GUEST as string)
     }
-    authStore.setIsLogin(false)
+    authStore.setLoggedIn(false)
   }
 
   if (kantormu.value && refresh.value) {
@@ -62,8 +61,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
       console.log('no token, then fetchAccessToken');
       await fetchAccessToken(refresh.value)
     }
-    authStore.setIsLogin(true)
-    authStore.setGuest(false)
+    authStore.setLoggedIn(true)
   } else {
     await setAsGuest()
   }
