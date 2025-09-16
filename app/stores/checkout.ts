@@ -2,60 +2,21 @@ import { defineStore } from 'pinia'
 
 export const useCheckoutStore = defineStore('checkout', {
   state: () => ({
-    checkoutJson: {
-      warning: {
-        membershipAvailable: {
-          title: '',
-          description: {
-            primary: '',
-            secondary: ''
-          }
-        },
-        gracePeriod: {
-          title: '',
-          description: ''
-        },
-        koran: {
-          title: '',
-          description: ''
-        },
-        voucher: {
-          title: '',
-          description: {
-            loggedIn: '',
-            guest: ''
-          }
-        },
-        partner: {
-          title: '',
-          description: {
-            loggedIn: '',
-            guest: ''
-          }
-        }
-      },
-      auto_apply_renewal: {
-        coupon_uuid: '',
-        promotion_desc: {
-          default: '',
-          applied: ''
-        }
-      },
-      next_payment: {
-        gopay: '',
-        credit_card: ''
-      },
-      payment_options: [],
-      payment_limit: {
-        autorenewal: []
-      }
-    } as CheckoutJsonData,
+    checkoutJson: {} as CheckoutJsonData,
     detailProduct: {} as KdpProductDetail,
     coupon: {} as CouponData,
     isLoading: true,
     isShowAutoRenewal: false,
   }),
   getters: {
+    isLoadedCheckoutJson(state): boolean {
+      if (
+      state.checkoutJson.auto_apply_renewal &&
+      state.checkoutJson.payment_options &&
+      state.checkoutJson.warning
+      ) return true
+      return false
+    }
     // getPaymentOptionList(state): PaymentOption[] {
     //   return state.checkout.payment_options
     // },
@@ -82,9 +43,6 @@ export const useCheckoutStore = defineStore('checkout', {
     //   this.isShowAutoRenewalPromo = true
     // },
     setCheckoutJson(payload: CheckoutJsonData) {
-      console.log('setCheckoutJson');
-      
-      console.log({payload});
       this.checkoutJson = payload
     },
     setDetailProduct(payload: KdpProductDetail) {

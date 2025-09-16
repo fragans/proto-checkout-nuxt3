@@ -11,25 +11,10 @@ export const useAuthStore = defineStore(
   'auth',
   {
     state: () => ({
-      userSubscriptionStatus: {
-        user: {
-          firstName: '',
-          lastName: '',
-          email: '',
-          expired: '',
-          gracePeriod: false,
-          isActive: '',
-          startDate: '',
-          endDate: '',
-          updateMembership: null
-        },
-        active: [] as SubscriptionItem[],
-        grace_period: [] as SubscriptionItem[],
-        expired: [] as SubscriptionItem[]
-      } as UserMembership,
+      userSubscriptionStatus: {} as UserMembership,
       userGuid: '',
-      accessToken: '',
-      refreshToken: '',
+      accessToken: useCookie<string>('kompas._token').value,
+      refreshToken: useCookie<string>('kompas._token_refresh').value,
       isLoggedIn: false,
       subscription: {
         user: { status: '' },
@@ -42,10 +27,11 @@ export const useAuthStore = defineStore(
         return [...state.userSubscriptionStatus.active].sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime())
       },
       isMembershipAvailable(state): boolean {
+        if (!state.userSubscriptionStatus.active) return false
         return state.userSubscriptionStatus.active.length !== 0
       },
       isGracePeriod(state): boolean {
-        return state.userSubscriptionStatus.grace_period?.length !== 0
+        return state.userSubscriptionStatus.gracePeriod?.length !== 0
       },
       latestMembershipEndDate(state): Date | null {
         if (!state.userSubscriptionStatus.active || state.userSubscriptionStatus.active.length === 0) {
@@ -60,14 +46,23 @@ export const useAuthStore = defineStore(
       },
       userMembership(state): Membership {
         return {
-          gracePeriod: state.userSubscriptionStatus.grace_period || []
+          gracePeriod: state.userSubscriptionStatus.gracePeriod || []
         }
       },
       getIsSubscriber(state): boolean {
+        if (!state.userSubscriptionStatus.active) return false
         return state.userSubscriptionStatus.active.length > 0
       },
       getFullName (state): string  {
+        if (!state.userSubscriptionStatus.user) return ''
         return `${state.userSubscriptionStatus.user.firstName} ${this.userSubscriptionStatus.user.lastName}`.trim()
+      },
+      getLatestMembershipEndDate (state): Date {
+        const latestEndDate = [...state.userSubscriptionStatus.active]
+          .map(item => new Date(item.endDate))
+          .reduce((latest, current) => current > latest ? current : latest)
+
+        return latestEndDate
       }
     },
     actions: {
@@ -88,28 +83,6 @@ export const useAuthStore = defineStore(
       },
       setSubscription(payload: Subscription) {
         this.subscription = payload;
-      },
-      reset() {
-        this.userGuid = ''
-        this.isLoggedIn = false
-        this.refreshToken = ''
-        this.accessToken = ''
-        this.userSubscriptionStatus = {
-          user: {
-            firstName: '',
-            lastName: '',
-            email: '',
-            expired: '',
-            gracePeriod: false,
-            isActive: '',
-            startDate: '',
-            endDate: '',
-            updateMembership: null
-          },
-          active: [],
-          grace_period: [],
-          expired: []
-        }
       }
     }
   }

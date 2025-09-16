@@ -6,7 +6,7 @@ export default defineEventHandler(async (event) => {
 
   const path = event.path.replace(/^\/api\/order/, "");
   const target = joinURL(proxyUrl, path);
-  console.log("target=", target);
+  // ("target=", target);
   
   return proxyRequest(event, target);
 });

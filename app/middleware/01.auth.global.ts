@@ -5,12 +5,11 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   const { KOMPAS_REFRESH_GUEST, SESSION_DOMAIN } = useRuntimeConfig().public
   const pinia = getActivePinia()
   const authStore = useAuthStore(pinia)
+  const { accessToken, refreshToken } = storeToRefs(authStore)
   const cookieOptions = {
     domain: SESSION_DOMAIN,
   }
-  const token = useCookie<string>('kompas._token', cookieOptions)
   const kantormu = useCookie<CookieKantormu>('kantormu', cookieOptions)
-  const refresh = useCookie<string>('kompas._token_refresh', cookieOptions)
   
   async function fetchAccessToken(refreshToken: string): Promise<string | null> {
     console.log('async fetchAccessToken');
@@ -29,7 +28,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
         
         if (data) {
           authStore.setAccessToken(data.accessToken)
-          token.value = data.accessToken
+          accessToken.value = data.accessToken
           return data.accessToken
         }
         return null
@@ -51,15 +50,15 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     authStore.setLoggedIn(false)
   }
 
-  if (kantormu.value && refresh.value) {
+  if (kantormu.value && refreshToken.value) {
     console.log('has kantormu & refresh');
     
     authStore.setUserGuid(kantormu.value.user.guid)
-    authStore.setRefreshToken(refresh.value)
+    authStore.setRefreshToken(refreshToken.value)
     
-    if (!token.value) {
+    if (!accessToken.value) {
       console.log('no token, then fetchAccessToken');
-      await fetchAccessToken(refresh.value)
+      await fetchAccessToken(refreshToken.value)
     }
     authStore.setLoggedIn(true)
   } else {

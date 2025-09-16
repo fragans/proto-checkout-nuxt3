@@ -5,7 +5,7 @@ export interface SubscriptionItem {
     endDate: string
  }
 
-export interface UserMembership {
+interface UserMembership {
   user: {
       firstName: string,
       lastName: string,
@@ -18,8 +18,8 @@ export interface UserMembership {
       updateMembership: null
   },
   active: SubscriptionItem[],
-  grace_period?: SubscriptionItem[],
-  expired?: SubscriptionItem[],
+  gracePeriod: SubscriptionItem[],
+  expired: SubscriptionItem[],
 }
 
 export type SubscriptionStatus = UserMembership

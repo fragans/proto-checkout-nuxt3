@@ -1,15 +1,10 @@
 <template>
   <div>
-    <ClientOnly>
-      <div v-if="isLoggedIn">
-        <KdpFlowSubscriber v-if="authStore.getIsSubscriber" />
-        <KdpFlowRegon v-else />
-      </div>
-      <KdpFlowGuest v-else />
-      <!-- <pre>
-        {{ addressData?.data }}
-      </pre> -->
-    </ClientOnly>
+    <div v-if="isLoggedIn">
+      <KdpFlowSubscriber v-if="authStore.getIsSubscriber" />
+      <KdpFlowRegon v-else />
+    </div>
+    <KdpFlowGuest v-else />
   </div>
 </template>
 
@@ -20,23 +15,8 @@ const authStore = useAuthStore()
 const checkoutStore = useCheckoutStore()
 
 const { isLoggedIn } = storeToRefs(authStore)
+const { CHECKOUT_JSON_URL } = useRuntimeConfig().public
 
-// const isRenew = ref(false)
-
-// function generateCouponPayload (value: number = 0): CouponPayload {
-//   const payload = {
-//     productId: $route.query.productId as string,
-//     serviceType: 'MBS',
-//     autoRenewal: value || isRenew.value ? 1 : 0
-//   }
-//   return payload
-// }
-
-
-// const { data: addressData } = await useAsyncData(
-//   'address-data',
-//   () => nuxtApp.$apiAccount<ApiResponse<Address, null>>(`/countries/region/id`)
-// )
 useAsyncData(
   computed(() => `detail-product-${$route.query.productId}`),
   async () => {
@@ -45,6 +25,16 @@ useAsyncData(
     return response
   }
 )
+
+useAsyncData(
+  'checkout-json',
+  async () => {
+    const response = await $fetch<CheckoutJsonResponse>(CHECKOUT_JSON_URL)
+    if (response.data) { checkoutStore.setCheckoutJson(response.data) }
+    return response
+  }
+)
+
 
 // await useAsyncData(
 //   "checkout-json",
@@ -55,4 +45,8 @@ useAsyncData(
 //     return null
 //   }
 // );
+
+useHead({
+  title: 'Checkout Page v3'
+})
 </script>

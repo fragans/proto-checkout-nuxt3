@@ -62,14 +62,7 @@
           </div>
         </div>
       </div>
-      <CardSubscriptionWarning
-        :user-subscription-status="userSubscriptionStatus"
-        :detail-product="detailProduct"
-        :is-logged-in="isLoggedIn"
-        :sub-start-date="startDate"
-        :sub-end-date="endDate"
-        class="pt-4"
-      />
+      <CardSubscriptionWarning class="pt-4" />
     </div>
   </div>
 </template>
@@ -83,22 +76,22 @@ import { useDateFormat } from '~/composables/useDateFormatter'
 const authStore = useAuthStore()
 const checkoutStore = useCheckoutStore()
 
-const { userSubscriptionStatus, isLoggedIn, isGracePeriod } = storeToRefs(authStore)
+const { userSubscriptionStatus, isGracePeriod } = storeToRefs(authStore)
 const { detailProduct } = storeToRefs(checkoutStore)
 // const userMembership = computed(() => authStore.userSubscriptionStatus)
 
 // const isGracePeriod = computed(() => userSubscriptionStatus.value.user.gracePeriod)
 
 const startDate = computed(() => {
-  if (isGracePeriod.value && userSubscriptionStatus.value.grace_period?.[0]?.endDate) {
-    return useDateFormat(new Date(userSubscriptionStatus.value.grace_period[0].endDate).toISOString(), true)
+  if (isGracePeriod.value && userSubscriptionStatus.value.gracePeriod?.[0]?.endDate) {
+    return useDateFormat(new Date(userSubscriptionStatus.value.gracePeriod[0].endDate).toISOString(), true)
   }
   const nowDate = new Date().toISOString()
   return useDateFormat(nowDate, true)
 })
 
 const endDate = computed(() => {
-  const start = (isGracePeriod.value && userSubscriptionStatus.value.grace_period?.[0]?.endDate) ? new Date(userSubscriptionStatus.value.grace_period[0].endDate) : new Date()
+  const start = (isGracePeriod.value && userSubscriptionStatus.value.gracePeriod?.[0]?.endDate) ? new Date(userSubscriptionStatus.value.gracePeriod[0].endDate) : new Date()
   const end = new Date(start)
   let duration = detailProduct.value.duration ?? 0
   let durationType = detailProduct.value.durationType
