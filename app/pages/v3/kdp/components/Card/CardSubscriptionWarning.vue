@@ -27,16 +27,16 @@
               <div v-html="useRenderTemplate(checkoutJson.warning.membershipAvailable.description.secondary, { start_date: startDate, end_date: useDateFormat(getLatestMembershipEndDate.toISOString(), true) })" />
             </li>
             <li v-if="detailProduct.isKoran" ref="koranWarning" class="text-xs md:text-sm pb-1 ml-3 mr-5 pt-2 leading-relaxed text-bold space-y-1">
-              <div >3 {{ checkoutJson.warning.koran.title }} </div>
+              <div v-html="checkoutJson.warning.koran.title" />
               <div v-html="checkoutJson.warning.koran.description" />
             </li>
             <li v-if="detailProduct.isProductVoucher && detailProduct.isProductVoucherAvailable" ref="voucherWarning" class="text-xs md:text-sm pb-1 ml-3 mr-5 pt-2 leading-relaxed text-bold space-y-1">
-              <div >4 {{ checkoutJson.warning.voucher.title }} </div>
+              <div v-html="checkoutJson.warning.voucher.title" />
               <div v-if="isLoggedIn" v-html="useRenderTemplate(checkoutJson.warning.voucher.description.loggedIn, { user_email: userSubscriptionStatus.user.email })" />
               <div v-else v-html="checkoutJson.warning.voucher.description.guest" />
             </li>
             <li v-if="detailProduct.isPartnerSubs" ref="membershipWarning" class="text-xs md:text-sm pb-1 ml-3 mr-5 pt-2 leading-relaxed text-bold space-y-1">
-              <div >5 {{ checkoutJson.warning.partner.title }} </div>
+              <div v-html="checkoutJson.warning.partner.title" />
               <div v-if="isLoggedIn" v-html="useRenderTemplate(checkoutJson.warning.partner.description.loggedIn, { user_email: userSubscriptionStatus.user.email })" />
               <div v-else v-html="checkoutJson.warning.partner.description.guest" />
             </li>

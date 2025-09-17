@@ -7,6 +7,7 @@ export const useCheckoutStore = defineStore('checkout', {
     coupon: {} as CouponData,
     isLoading: true,
     isShowAutoRenewal: false,
+    isAutoRenewal: false
   }),
   getters: {
     isLoadedCheckoutJson(state): boolean {

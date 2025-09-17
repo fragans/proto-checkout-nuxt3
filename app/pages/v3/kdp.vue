@@ -1,11 +1,11 @@
 <template>
-  <div>
+  <ClientOnly>
     <div v-if="isLoggedIn">
       <KdpFlowSubscriber v-if="authStore.getIsSubscriber" />
       <KdpFlowRegon v-else />
     </div>
     <KdpFlowGuest v-else />
-  </div>
+  </ClientOnly>
 </template>
 
 <script setup lang="ts">
@@ -15,6 +15,7 @@ const authStore = useAuthStore()
 const checkoutStore = useCheckoutStore()
 
 const { isLoggedIn } = storeToRefs(authStore)
+// const { isAutoRenewal } = storeToRefs(checkoutStore)
 const { CHECKOUT_JSON_URL } = useRuntimeConfig().public
 
 useAsyncData(
@@ -39,15 +40,6 @@ useAsyncData(
 )
 
 
-// await useAsyncData(
-//   "checkout-json",
-//   async () => {
-//     await checkoutStore.fetchCheckoutJson()
-//     const payload = generateCouponPayload()
-//     await checkoutStore.fetchAutoApplyCouponRenewal(payload)
-//     return null
-//   }
-// );
 
 useHead({
   title: 'Checkout Page v3'

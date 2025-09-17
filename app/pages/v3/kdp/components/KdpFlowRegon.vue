@@ -1,7 +1,7 @@
 <template>
   <div>
     <span class="text-grey-40">Regon Flow</span>
-    <CardPaymentHeader />
+    <SectionPaymentHeader />
     
     <CardSubscriptionSummary />
   </div>

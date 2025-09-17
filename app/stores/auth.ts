@@ -1,11 +1,4 @@
 import { defineStore } from 'pinia'
-import type { UserMembership, SubscriptionItem, Membership } from '#shared/types/ApiAccountMembership'
-
-interface Subscription {
-  user: { status: string };
-  startDate: string;
-  endDate: string;
-}
 
 export const useAuthStore = defineStore(
   'auth',
@@ -13,14 +6,10 @@ export const useAuthStore = defineStore(
     state: () => ({
       userSubscriptionStatus: {} as UserMembership,
       userGuid: '',
-      accessToken: useCookie<string>('kompas._token').value,
-      refreshToken: useCookie<string>('kompas._token_refresh').value,
+      accessToken: '',
+      refreshToken: '',
       isLoggedIn: false,
-      subscription: {
-        user: { status: '' },
-        startDate: '',
-        endDate: '',
-      } as Subscription,
+      address: [] as Address[]
     }),
     getters: {
       userActiveSorted(state): SubscriptionItem[] {
@@ -35,21 +24,13 @@ export const useAuthStore = defineStore(
         if (!state.userSubscriptionStatus.gracePeriod) return false
         return state.userSubscriptionStatus.gracePeriod?.length !== 0
       },
-      latestMembershipEndDate(state): Date | null {
+      latestMembershipEndDate(state): Date {
         if (!state.userSubscriptionStatus.active || state.userSubscriptionStatus.active.length === 0) {
-          return null
+          return new Date()
         }
         return [...state.userSubscriptionStatus.active]
           .map(item => new Date(item.endDate))
           .reduce((latest, current) => current > latest ? current : latest)
-      },
-      userStatus(state): string {
-        return state.subscription.user.status
-      },
-      userMembership(state): Membership {
-        return {
-          gracePeriod: state.userSubscriptionStatus.gracePeriod || []
-        }
       },
       getIsSubscriber(state): boolean {
         if (!state.userSubscriptionStatus.active) return false
@@ -84,8 +65,8 @@ export const useAuthStore = defineStore(
       setRefreshToken(payload: string): void {
         this.refreshToken = payload;
       },
-      setSubscription(payload: Subscription) {
-        this.subscription = payload;
+      setAddress(payload: Address[]) {
+        this.address = payload
       }
     }
   }

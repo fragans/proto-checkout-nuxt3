@@ -1,8 +1,9 @@
 <template>
   <div>
     <span class="text-grey-40"> Guest Flow </span>
-    <CardPaymentHeader />
+    <SectionPaymentHeader />
     <CardSubscriptionSummary />
+    <SectionKoran />
   </div>
 </template>
 

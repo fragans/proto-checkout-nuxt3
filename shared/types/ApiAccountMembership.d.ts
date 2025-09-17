@@ -1,34 +1,32 @@
-export interface SubscriptionItem {
-    membershipTitle: string
-    membershipSlug: string,
-    startDate: string,
-    endDate: string
- }
+interface SubscriptionItem {
+  membershipTitle: string
+  membershipSlug: string,
+  startDate: string,
+  endDate: string
+}
 
 interface UserMembership {
   user: {
-      firstName: string,
-      lastName: string,
-      email: string,
-      expired: string,
-      gracePeriod: boolean,
-      isActive: string,
-      startDate: string,
-      endDate: string,
-      updateMembership: null
+    firstName: string,
+    lastName: string,
+    email: string,
+    expired: string,
+    gracePeriod: boolean,
+    isActive: string,
+    startDate: string,
+    endDate: string,
+    updateMembership: null
   },
   active: SubscriptionItem[],
   gracePeriod: SubscriptionItem[],
   expired: SubscriptionItem[],
 }
 
-export type SubscriptionStatus = UserMembership
-
-export interface Membership {
+interface Membership {
   gracePeriod: SubscriptionItem[]
 }
 
-export interface ApiUserMembership {
+interface ApiUserMembership {
   code: KnownResponseCodes
   data: {
     result: UserMembership

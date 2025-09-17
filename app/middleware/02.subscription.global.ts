@@ -2,17 +2,17 @@ import { getActivePinia } from "pinia"
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default defineNuxtRouteMiddleware( async (to, from) => {
   if (import.meta.server) return
-  const { ENV_MODE, SESSION_DOMAIN } = useRuntimeConfig().public
-  const cookieOptions = {
-    domain: SESSION_DOMAIN
-  }
+  const { SESSION_DOMAIN } = useRuntimeConfig().public
+  const cookieOptions = { domain: SESSION_DOMAIN }
 
   const pinia = getActivePinia()
   const authStore = useAuthStore(pinia)
+  const { isLoggedIn } = storeToRefs(authStore)
+
   const nuxtApp = useNuxtApp()
-  const token = useCookie('kompas._token', cookieOptions)
-  const kantormu = useCookie('kantormu', cookieOptions)
-  const refresh = useCookie('kompas._token_refresh', cookieOptions)
+  const cookieToken = useCookie('kompas._token', cookieOptions)
+  const cookieKantormu = useCookie('kantormu', cookieOptions)
+  const cookieRefresh = useCookie('kompas._token_refresh', cookieOptions)
   
   async function getUserMembership (): Promise<void> {
     
@@ -23,20 +23,21 @@ export default defineNuxtRouteMiddleware( async (to, from) => {
         {
           method: 'GET',
           headers: {
-            Authorization: `Bearer ${token.value}`,
+            Authorization: `Bearer ${cookieToken.value}`,
           },
         }
       )
       
       if (data) {
         authStore.setUserSubscriptionStatus(data.result)
-        const cookieSubscription = {
-          domain: SESSION_DOMAIN || (ENV_MODE === 'production' ? '.kompas.id' : '.kompas.cloud'),
-          path: '/',
-          maxAge: 60 * 60 * 24 * 365,
-          httpOnly: false,
-        }
-        useCookie('kompas._subscriptionStatus', cookieSubscription)
+        // const cookieSubsOpt = {
+        //   domain: SESSION_DOMAIN,
+        //   path: '/',
+        //   maxAge: 60 * 60 * 24 * 365,
+        //   httpOnly: false,
+        // }
+        // const cookieSubs = useCookie<UserMembership>('kompas._subscriptionStatus', cookieSubsOpt)
+        // cookieSubs.value = data.result
       }
     } catch (error) {
       console.error('getUserMembership error', error)
@@ -45,7 +46,7 @@ export default defineNuxtRouteMiddleware( async (to, from) => {
     
 
   }
-  if (kantormu.value && refresh.value) {
+  if (cookieKantormu.value && cookieRefresh.value && isLoggedIn.value) {
     await callOnce(() => {
       getUserMembership()
     })

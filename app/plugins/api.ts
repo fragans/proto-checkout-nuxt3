@@ -130,6 +130,9 @@ export default defineNuxtPlugin(({ $pinia }) => {
           // $sentry.captureMessage(msg)
           throw createError({ statusCode: 404, fatal: true })
         }
+        else if (response.status >= 500) {
+          console.log('SERVICE DOWN');
+        }
         else {
           // const msg = `[APICALL ${response.status}] - ${response.url}`
           // $sentry.captureException(error)

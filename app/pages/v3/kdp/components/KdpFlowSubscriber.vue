@@ -1,7 +1,7 @@
 <template>
   <div>
     <span class="text-grey-40">Subscriber Flow</span>
-    <CardPaymentHeader />
+    <SectionPaymentHeader />
     <CardSubscriptionSummary />
   </div>
 </template>

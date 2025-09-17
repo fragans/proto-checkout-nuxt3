@@ -1,20 +1,20 @@
 import { getActivePinia } from "pinia"
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default defineNuxtRouteMiddleware(async (to, from) => {
-  if (import.meta.client) return
+  if (import.meta.server) return
   const { KOMPAS_REFRESH_GUEST, SESSION_DOMAIN } = useRuntimeConfig().public
   const pinia = getActivePinia()
   const authStore = useAuthStore(pinia)
   const { accessToken, refreshToken } = storeToRefs(authStore)
-  const cookieOptions = {
-    domain: SESSION_DOMAIN,
-  }
+  const cookieOptions = { domain: SESSION_DOMAIN }
   const cookieToken = useCookie<string>('kompas._token', cookieOptions)
   const cookieRefresh = useCookie<string>('kompas._token_refresh', cookieOptions)
-  const kantormu = useCookie<CookieKantormu>('kantormu', cookieOptions)
+  const cookieKantormu = useCookie<CookieKantormu>('kantormu', cookieOptions)
   
   async function fetchAccessToken(refreshToken: string): Promise<string | null> {
       const isGuest = refreshToken === KOMPAS_REFRESH_GUEST
+      console.log({isGuest});
+      
       if (isGuest) console.log('using guest refresh')
       try {
         const url = `/api/account/tokens/refresh`
@@ -33,7 +33,6 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
           authStore.setAccessToken(data.accessToken)
           accessToken.value = data.accessToken
           cookieToken.value = data.accessToken
-          cookieRefresh.value = refreshToken 
           return data.accessToken
         }
         return null
@@ -49,24 +48,26 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   }
   async function setAsGuest() {
     console.log('setAsGuest');
-    
-    const token = await fetchAccessToken(KOMPAS_REFRESH_GUEST as string)
-    if (!token) {
-      authStore.setUserGuid('GUEST')
-      authStore.setRefreshToken(KOMPAS_REFRESH_GUEST as string)
-    }
+    cookieRefresh.value = KOMPAS_REFRESH_GUEST
+    await fetchAccessToken(KOMPAS_REFRESH_GUEST as string)
+    authStore.setUserGuid('GUEST')
+    authStore.setRefreshToken(KOMPAS_REFRESH_GUEST)
     authStore.setLoggedIn(false)
   }
-
-  if (kantormu.value && refreshToken.value) {
+  console.log('has cookies?');
+  console.log(cookieKantormu.value && cookieRefresh.value ? 'yes' : 'no');
+  
+  if (cookieKantormu.value && cookieRefresh.value) {
     console.log('has kantormu & refresh');
     
-    authStore.setUserGuid(kantormu.value.user.guid)
+    authStore.setUserGuid(cookieKantormu.value.user.guid)
     authStore.setRefreshToken(refreshToken.value)
     
     if (!accessToken.value) {
       console.log('no token, then fetchAccessToken');
-      await fetchAccessToken(refreshToken.value)
+      await callOnce(() => {
+        fetchAccessToken(useCookie<string>('kompas._token_refresh', cookieOptions).value)
+      })
     }
     authStore.setLoggedIn(true)
   } else {
