@@ -1,6 +1,7 @@
 <template>
-  <div class="relative pb-16" :class="detailProduct.isKoran ? 'pt-10' : 'pt-2'">
+  <div class="relative pb-16" :class="detailProduct?.isKoran ? 'pt-10' : 'pt-2'">
     <SectionKoranAddress />
+    
   </div>
 </template>
 
@@ -8,6 +9,7 @@
 const nuxtApp = useNuxtApp()
 
 const authStore = useAuthStore()
+const address = useAddressStore()
 const checkoutStore = useCheckoutStore()
 const { detailProduct } = storeToRefs(checkoutStore)
 const { userGuid } = storeToRefs(authStore)
@@ -16,7 +18,7 @@ useAsyncData(
   computed(() => `user-address-${userGuid.value}`),
   async () => {
     const response = await nuxtApp.$apiOrder<ApiResponse<Address[], null>>(`/user-address`)
-    if (response.data) { authStore.setAddress(response.data) }
+    if (response.data) { address.setUserAddressList(response.data) }
     return response
   },
   {

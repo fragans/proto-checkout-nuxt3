@@ -2,21 +2,18 @@ import { defineStore } from 'pinia'
 
 export const useCheckoutStore = defineStore('checkout', {
   state: () => ({
-    checkoutJson: {} as CheckoutJsonData,
-    detailProduct: {} as KdpProductDetail,
-    coupon: {} as CouponData,
+    checkoutJson: null as null | CheckoutJsonData,
+    detailProduct: null as null | KdpProductDetail,
+    coupon: null as null | CouponData,
     isLoading: true,
     isShowAutoRenewal: false,
     isAutoRenewal: false
   }),
   getters: {
-    isLoadedCheckoutJson(state): boolean {
-      if (
-      state.checkoutJson.auto_apply_renewal &&
-      state.checkoutJson.payment_options &&
-      state.checkoutJson.warning
-      ) return true
-      return false
+    getValidArea(state): number[] {
+      if (!state.detailProduct) return []
+      if (!state.detailProduct.variants) return []
+      return state.detailProduct.variants.map(variant => variant.area)
     }
     // getPaymentOptionList(state): PaymentOption[] {
     //   return state.checkout.payment_options

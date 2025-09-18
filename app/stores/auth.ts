@@ -8,8 +8,7 @@ export const useAuthStore = defineStore(
       userGuid: '',
       accessToken: '',
       refreshToken: '',
-      isLoggedIn: false,
-      address: [] as Address[]
+      isLoggedIn: false
     }),
     getters: {
       userActiveSorted(state): SubscriptionItem[] {
@@ -64,9 +63,6 @@ export const useAuthStore = defineStore(
       },
       setRefreshToken(payload: string): void {
         this.refreshToken = payload;
-      },
-      setAddress(payload: Address[]) {
-        this.address = payload
       }
     }
   }

@@ -55,13 +55,13 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     authStore.setLoggedIn(false)
   }
   console.log('has cookies?');
-  console.log(cookieKantormu.value && cookieRefresh.value ? 'yes' : 'no');
+  console.log(cookieKantormu.value && cookieRefresh.value ? 'yes' : 'no')
   
-  if (cookieKantormu.value && cookieRefresh.value) {
+  if (cookieKantormu.value) {
     console.log('has kantormu & refresh');
-    
     authStore.setUserGuid(cookieKantormu.value.user.guid)
     authStore.setRefreshToken(refreshToken.value)
+    if (!cookieRefresh.value) return setAsGuest()
     
     if (!accessToken.value) {
       console.log('no token, then fetchAccessToken');

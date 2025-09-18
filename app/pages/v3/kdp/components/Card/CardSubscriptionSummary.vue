@@ -1,9 +1,9 @@
 <template>
   <div class="shadow rounded-lg">
     <div class="w-full relative flex">
-      <div v-if="!detailProduct.isProductVoucher && detailProduct.isProductVoucherAvailable" class="w-full h-full absolute z-10">
+      <div v-if="!detailProduct?.isProductVoucher && detailProduct?.isProductVoucherAvailable" class="w-full h-full absolute z-10">
         <img
-          v-if="detailProduct.durationType === 4"
+          v-if="detailProduct?.durationType === 4"
           class="w-full h-full rounded-t-lg"
           src="https://checkoutv2.kompas.cloud/assets/img/banner/bannerGray.png"
           alt="Kompas-Digital-Monthly-Package"
@@ -28,7 +28,7 @@
       </div>
       <div class="w-full rounded-t-md py-6 md:pt-10 md:pb-10 px-6 z-20 text-white">
         <p class="text-lg lg:text-xl font-bold font-lora">
-          {{ detailProduct.title }}
+          {{ detailProduct?.title }}
         </p>
       </div>
     </div>
@@ -93,8 +93,8 @@ const startDate = computed(() => {
 const endDate = computed(() => {
   const start = (isGracePeriod.value && userSubscriptionStatus.value.gracePeriod?.[0]?.endDate) ? new Date(userSubscriptionStatus.value.gracePeriod[0].endDate) : new Date()
   const end = new Date(start)
-  let duration = detailProduct.value.duration ?? 0
-  let durationType = detailProduct.value.durationType
+  let duration = detailProduct.value?.duration ?? 0
+  let durationType = detailProduct.value?.durationType
 
   if (durationType === 3 && duration % 12 === 0) {
     durationType = 4

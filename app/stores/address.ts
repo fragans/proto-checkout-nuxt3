@@ -1,6 +1,4 @@
 import { defineStore } from 'pinia'
-import type { Address, FormData, IFakturPajak } from '#shared/types/address'
-import type { KdpProductDetail } from '#shared/types/product'
 
 export const useAddressStore = defineStore('address', {
   state: () => ({
@@ -24,19 +22,6 @@ export const useAddressStore = defineStore('address', {
     checkoutEmail: ''
   }),
   getters: {
-    dataUserProvince: (state): string => state.userProvince,
-    dataUserShippingCost: (state): number => state.shippingCost,
-    isUserJawaBali: (state): boolean => state.isJawaBali,
-    dataUserDefaultAddress: (state): Address => state.userDefaultAddress,
-    dataUserAddressList: (state): Address[] => state.userAddressList,
-    formDataUser: (state): FormData => state.formData,
-    dataIsInvoice: (state): boolean => state.isInvoice,
-    dataDateKoran: (state): string => state.dateKoran,
-    isKoran: (state): boolean => state.isProductKoran,
-    selectedAddressId: (state): number => state.addressId,
-    dataFakturPajak: (state): IFakturPajak => state.fakturPajak,
-    selectedArea: (state): number => state.area,
-    dataCheckoutEmail: (state): string => state.checkoutEmail,
   },
   actions: {
     reset() {

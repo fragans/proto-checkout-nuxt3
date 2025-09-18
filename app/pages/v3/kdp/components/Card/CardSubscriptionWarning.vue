@@ -1,6 +1,6 @@
 <!-- eslint-disable vue/no-v-html -->
 <template>
-  <div v-if="isMembershipAvailable || detailProduct.isKoran || detailProduct.isProductVoucher || isGracePeriod || detailProduct.isPartnerSubs" ref="warningBody">
+  <div v-if="isMembershipAvailable || detailProduct?.isKoran || detailProduct?.isProductVoucher || isGracePeriod || detailProduct?.isPartnerSubs" ref="warningBody">
     <div
       class="flex flex-row justify-between rounded-md"
       :class="[(isMembershipAvailable || isGracePeriod) ? 'bg-[#FFEECC]' : 'bg-[#E1F0FF]']"
@@ -17,7 +17,7 @@
             </h4>
           </div>
           
-          <ul v-if="isLoadedCheckoutJson" class="list-disc ml-5 md:ml-10">
+          <ul v-if="checkoutJson && detailProduct" class="list-disc ml-5 md:ml-10">
             <li v-if="isGracePeriod" ref="gracePeriodWarning" class="text-xs md:text-sm pb-1 ml-3 mr-5 pt-2 leading-relaxed text-bold space-y-1">
               <div v-html="checkoutJson.warning.gracePeriod.title" />
               <div v-html="useRenderTemplate(checkoutJson.warning.gracePeriod.description, { gp_end_date: endDate })" />
@@ -62,7 +62,7 @@ const { isMembershipAvailable,
 } = storeToRefs(authStore)
 
 const checkoutStore = useCheckoutStore()
-const { detailProduct, checkoutJson, isLoadedCheckoutJson } = storeToRefs(checkoutStore)
+const { detailProduct, checkoutJson } = storeToRefs(checkoutStore)
 
 const endDate = computed(() => {
   const [ first ] = userSubscriptionStatus.value.gracePeriod ?? []
@@ -84,9 +84,3 @@ const startDate = computed(() => {
   return useDateFormat(nowDate, true)
 })
 </script>
-
-<style scoped>
-strong {
-  @apply font-bold;
-}
-</style>
