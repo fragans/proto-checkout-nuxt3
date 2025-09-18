@@ -1,5 +1,5 @@
 <template>
-  <div ref="rootHeader" class="sticky z-50" :style="{ top: '-' + defaultHeightIklan + 'px' }">
+  <div ref="rootHeader" class="sticky z-50" >
     <div ref="header-default" :class="{ 'w-full z-40': true }">
 
       <div class="relative w-full">
@@ -26,7 +26,7 @@
 import type { UiKompasBar } from '#components'
 
 const rootHeader = ref()
-const defaultHeightIklan = ref(0)
+// const defaultHeightIklan = ref(0)
 // const getScrollTop = ref(0)
 
 const headerbar = ref<InstanceType<typeof UiKompasBar> | null>(null)

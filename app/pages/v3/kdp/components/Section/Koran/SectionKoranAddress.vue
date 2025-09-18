@@ -11,21 +11,7 @@
 
     <div :class="detailProduct?.isKoran ? 'w-full' : ''">
       <div v-if="userAddressList.length >= 1 && detailProduct?.isKoran && isLoggedIn"> customer address</div>
-      <button
-        v-else-if="detailProduct?.isKoran"
-        id="shipping-address"
-        class="flex flex-row gap-4 w-full rounded justify-center items-center p-4 mb-2 shadow-md"
-        :class="[isShippingAddressEmpty ? 'border border-red-30' : 'border border-grey-30']"
-        @click="openModalFirstUpdateAddress()"
-      >
-        <Icon
-          name="fa7-solid:circle-plus"
-          class="text-md text-blue-60 flex pr-4 pt-1"
-        />
-        <strong class="flex text-blue-60">
-          Buat Alamat Pengiriman
-        </strong>
-      </button>
+      <ModalKoranAddress />
 
       <div v-if="isShippingAddressEmpty" ref="errorAddressEmptyText" class="flex space-x-1 mt-2">
         <span class="text-red-40 text-xs">Alamat harus diisi.</span>
@@ -38,9 +24,9 @@
         </span>
       </div>
     </div>
-    <Teleport to="body">
-      <ModalKoranAddress />
-    </Teleport>
+    
+    
+    
   </div>
 </template>
 
@@ -96,10 +82,23 @@ function openModalAddress () {
   console.log('openModalAddress');
   
 }
-function openModalFirstUpdateAddress () {
-  console.log('openModalFirstUpdateAddress');
-  
-}
+const url = 'https://api.kompas.id/account/api/v1/countries/region/id'
+useAsyncData(
+  computed(() => `address-provinces`),
+  async () => {
+    const response = await $fetch<ApiResponse<Province[], null>>(url)
+    console.log({response});
+    
+    if (response.data) { 
+      
+      addressStore.setProvinceList(response.data) 
+    }
+    return response
+  },
+  {
+    server: false
+  }
+)
 </script>
 
 <style>

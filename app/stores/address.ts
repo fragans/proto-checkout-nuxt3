@@ -19,7 +19,9 @@ export const useAddressStore = defineStore('address', {
       name: '',
       address: ''
     } as IFakturPajak,
-    checkoutEmail: ''
+    checkoutEmail: '',
+    openModalKoranAddress: false,
+    provinceList: [] as Province[]
   }),
   getters: {
   },
@@ -46,6 +48,9 @@ export const useAddressStore = defineStore('address', {
     },
     setDetailProduct(payload: KdpProductDetail) {
       this.detailProduct = payload
+    },
+    setProvinceList(payload: Province[]) {
+      this.provinceList = payload
     },
     setProvince(payload: string) {
       this.userProvince = payload
