@@ -3,7 +3,7 @@
     v-model:open="openModalKoranAddress"
     title="Alamat Pengiriman"
     description="Alamat Pengiriman digunakan untuk keperluan pengiriman produk Harian Kompas."
-    :ui="{ footer: 'justify-start' }">
+    >
       <UButton
         block
         variant="outline"
@@ -38,6 +38,23 @@
           <UFormField label="Kecamatan*" name="disctrict">
             <UInputMenu v-model="formState.district" :items="getDistrictList" value-key="district" label-key="district" required open-on-focus/>
           </UFormField>
+          <UFormField label="Kelurahan*" name="village">
+            <UInputMenu v-model="formState.village" :items="getVillageList" value-key="village" label-key="village" required open-on-focus/>
+          </UFormField>
+          <UFormField label="Alamat*" name="village">
+            <UTextarea v-model="formState.address" />
+          </UFormField>
+          <UFormField label="Kode Pos*" name="zipCode">
+            <UInput v-model="formState.zipCode" required/>
+          </UFormField>
+          <div class="grid grid-cols-2 gap-4 w-full">
+            <UFormField label="Normor Ponsel*" name="phone">
+              <UInput v-model="formState.phone" type="phone" required/>
+            </UFormField>
+            <UFormField label="Email*" name="email">
+              <UInput v-model="formState.email" type="email" required/>
+            </UFormField>
+          </div>
           
         </div>
       </template>
@@ -53,15 +70,16 @@
 const adddressStore = useAddressStore()
 const { openModalKoranAddress, provinceList } = storeToRefs(adddressStore)
 const formState = reactive({
-  email: '',
   firstName: '',
   lastName: '',
   province: '',
-  city: '',
-  district: '',
-  state: '',
-  zip: '',
-  country: ''
+  city: '', // kota/kabupaten
+  district: '', // Kecamatan
+  village: '', // Kelurahan
+  address: '',
+  zipCode: '',
+  phone: '',
+  email: '',
 })
 const getCityList = computed<City[]>(()=>{
   const selectedProvince = provinceList.value.find(province => province.province === formState.province)
@@ -75,6 +93,14 @@ const getDistrictList = computed<District[]>(()=>{
   const selectedCity = getCityList.value.find(city => city.city === formState.city)
   if (selectedCity) {
     return selectedCity?.districts
+  }
+  return []
+})
+
+const getVillageList = computed<Village[]>(()=>{
+  const selectedDistrict = getDistrictList.value.find(dis => dis.district === formState.district)
+  if (selectedDistrict) {
+    return selectedDistrict?.villages
   }
   return []
 })

@@ -18,6 +18,27 @@ export default defineAppConfig({
       slots: {
         root: 'w-full',
       }
+    },
+    textarea: {
+      slots: {
+        root: 'w-full',
+      }
+    },
+    modal: {
+      slots: {
+        footer: 'flex justify-start',
+      }
+    },
+    accordion: {
+      slots: {
+        root: 'w-full'
+      },
+      variants:{
+        warning: {
+          root: 'orange',
+          trigger: 'neutral'
+        }
+      }
     }
   }
 })

@@ -1,7 +1,7 @@
 import { getActivePinia } from "pinia" 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default defineNuxtRouteMiddleware( async (to, from) => {
-  if (import.meta.server) return
+  if (import.meta.client) return
   const { SESSION_DOMAIN } = useRuntimeConfig().public
   const cookieOptions = { domain: SESSION_DOMAIN }
 

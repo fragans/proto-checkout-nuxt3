@@ -23,6 +23,10 @@
           atau ganti ke <strong><u><span class="cursor-pointer" @click="redirectToBerlangganan">paket lainnya</span></u></strong>.
         </span>
       </div>
+      <div class="bg-orange-10">
+        <BannerKoranAddressInfo v-if="detailProduct?.isKoran" class="mt-5 bg-orange-10 px-2 rounded-md" />
+      </div>
+
     </div>
     
     
@@ -31,6 +35,8 @@
 </template>
 
 <script lang="ts" setup>
+
+
 const checkoutStore = useCheckoutStore()
 const { detailProduct } = storeToRefs(checkoutStore)
 
@@ -87,12 +93,7 @@ useAsyncData(
   computed(() => `address-provinces`),
   async () => {
     const response = await $fetch<ApiResponse<Province[], null>>(url)
-    console.log({response});
-    
-    if (response.data) { 
-      
-      addressStore.setProvinceList(response.data) 
-    }
+    if (response.data) addressStore.setProvinceList(response.data) 
     return response
   },
   {

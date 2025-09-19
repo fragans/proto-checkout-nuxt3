@@ -16,7 +16,6 @@ import { storeToRefs, getActivePinia } from 'pinia'
 export default defineNuxtPlugin(({ $pinia }) => {
   const {
     SESSION_DOMAIN,
-    API_BASE_ACCOUNT,
     KOMPAS_REFRESH_GUEST,
   } = useRuntimeConfig().public
 
@@ -113,7 +112,7 @@ export default defineNuxtPlugin(({ $pinia }) => {
           catch (error) {
             options.retry = false
             console.error('Token refresh failed:', error)
-            console.log('dont navigateTo', `${API_BASE_ACCOUNT}/logout`)
+            // console.log('dont navigateTo', `${API_BASE_ACCOUNT}/logout`)
             // await navigateTo(`${API_BASE_ACCOUNT}/logout`, {
             //   external: true,
             // })
@@ -123,6 +122,10 @@ export default defineNuxtPlugin(({ $pinia }) => {
 
         if (response.status === 410) {
           throw createError({ statusCode: 410, fatal: true })
+        }
+        else if (response.status === 403) {
+          // authStore.setLoggedIn(false)
+          // useCookie('kompas._token_refresh', cookieOptions).value = ''
         }
         else if (response.status === 404) {
           // const msg = `[APICALL ${response.status}] - ${response.url}`
