@@ -10,7 +10,8 @@
     </div>
 
     <div :class="detailProduct?.isKoran ? 'w-full' : ''">
-      <div v-if="userAddressList.length >= 1 && detailProduct?.isKoran && isLoggedIn"> customer address</div>
+      <div v-if="(userAddressList.length >= 1 && detailProduct?.isKoran && isLoggedIn) || isGuestAddress"> customer address</div>
+
       <ModalKoranAddress />
 
       <div v-if="isShippingAddressEmpty" ref="errorAddressEmptyText" class="flex space-x-1 mt-2">
@@ -44,7 +45,7 @@ const authStore = useAuthStore()
 const { isLoggedIn } = storeToRefs(authStore)
 
 const addressStore = useAddressStore()
-const { userAddressList } = storeToRefs(addressStore)
+const { userAddressList, isGuestAddress, openModalKoranAddress } = storeToRefs(addressStore)
 
 const isShippingAddressInvalid = ref(false)
 const isShippingAddressEmpty = ref(true)
@@ -85,7 +86,7 @@ onMounted(async () => {
 })
 
 function openModalAddress () {
-  console.log('openModalAddress');
+  openModalKoranAddress.value = true
   
 }
 const url = 'https://api.kompas.id/account/api/v1/countries/region/id'

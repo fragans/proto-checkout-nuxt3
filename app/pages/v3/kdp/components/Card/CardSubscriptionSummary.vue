@@ -5,14 +5,14 @@
         <img
           v-if="detailProduct?.durationType === 4"
           class="w-full h-full rounded-t-lg"
-          src="https://checkoutv2.kompas.cloud/assets/img/banner/bannerGray.png"
+          src="https://checkoutv2.kompas.id/assets/img/banner/bannerGray.png"
           alt="Kompas-Digital-Monthly-Package"
           loading="lazy"
         >
         <img
           v-else
           class="w-full h-full rounded-t-lg"
-          src="https://checkoutv2.kompas.cloud/assets/img/banner/bannerLight.png"
+          src="https://checkoutv2.kompas.id/assets/img/banner/bannerLight.png"
           alt="Kompas-Digital-Monthly-Package"
           loading="lazy"
         >
@@ -20,7 +20,7 @@
       <div v-else class="w-full h-full absolute z-10">
         <img
           class="w-full h-full rounded-t-lg"
-          src="https://checkoutv2.kompas.cloud/assets/img/banner/bannerGray.png"
+          src="https://checkoutv2.kompas.id/assets/img/banner/bannerGray.png"
           alt="Kompas-Digital-Monthly-Package"
           format="webp"
           preload

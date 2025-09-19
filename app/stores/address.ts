@@ -21,7 +21,8 @@ export const useAddressStore = defineStore('address', {
     } as IFakturPajak,
     checkoutEmail: '',
     openModalKoranAddress: false,
-    provinceList: [] as Province[]
+    provinceList: [] as Province[],
+    isGuestAddress: false
   }),
   getters: {
   },
