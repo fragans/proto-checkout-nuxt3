@@ -23,8 +23,8 @@
           atau ganti ke <strong><u><span class="cursor-pointer" @click="redirectToBerlangganan">paket lainnya</span></u></strong>.
         </span>
       </div>
-      <div class="bg-orange-10">
-        <BannerKoranAddressInfo v-if="detailProduct?.isKoran" class="mt-5 bg-orange-10 px-2 rounded-md" />
+      <div class="bg-orange-10 rounded-md">
+        <BannerKoranAddressInfo v-if="detailProduct?.isKoran" class="mt-5 px-4" />
       </div>
 
     </div>

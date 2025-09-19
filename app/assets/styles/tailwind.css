@@ -22,3 +22,7 @@
   --ui-text-inverted: var(--color-white);
   --ui-radius: 0.25rem;
 }
+
+[data-reka-collapsible-content] {
+  --reka-collapsible-content-height: auto !important;
+}

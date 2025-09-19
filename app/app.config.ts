@@ -36,7 +36,8 @@ export default defineAppConfig({
       variants:{
         warning: {
           root: 'orange',
-          trigger: 'neutral'
+          trigger: 'neutral',
+          
         }
       }
     }
