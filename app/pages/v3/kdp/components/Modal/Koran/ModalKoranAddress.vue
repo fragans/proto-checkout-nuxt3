@@ -24,36 +24,36 @@
           <div class="flex flex-col gap-4">
             <div class="grid grid-cols-2 gap-4 w-full">
               <UFormField label="Nama Depan*" name="firstName">
-                <UInput v-model="formState.firstName" required/>
+                <UInput v-model="formState.firstName" required placeholder="Nama Depan Penerima"/>
               </UFormField>
               <UFormField label="Nama Belakang*" name="lastName">
-                <UInput v-model="formState.lastName" required/>
+                <UInput v-model="formState.lastName" required placeholder="Nama Belakang Penerima"/>
               </UFormField>
             </div>
             <UFormField label="Provinsi*" name="province">
-              <UInputMenu v-model="formState.province" :items="provinceList" value-key="province" label-key="province" required open-on-focus/>
+              <UInputMenu v-model="formState.province" :items="provinceList" value-key="province" label-key="province" required open-on-focus placeholder="Pilih Provinsi"/>
             </UFormField>
             <UFormField label="Kabupaten/Kota*" name="city">
-              <UInputMenu v-model="formState.city" :items="getCityList" value-key="city" label-key="city" required open-on-focus/>
+              <UInputMenu v-model="formState.city" :items="getCityList" value-key="city" label-key="city" required open-on-focus placeholder="Pilih Kabupaten/Kota"/>
             </UFormField>
             <UFormField label="Kecamatan*" name="disctrict">
-              <UInputMenu v-model="formState.district" :items="getDistrictList" value-key="district" label-key="district" required open-on-focus/>
+              <UInputMenu v-model="formState.district" :items="getDistrictList" value-key="district" label-key="district" required open-on-focus placeholder="Pilih Kecamatan"/>
             </UFormField>
             <UFormField label="Kelurahan*" name="village">
-              <UInputMenu v-model="formState.village" :items="getVillageList" value-key="village" label-key="village" required open-on-focus/>
+              <UInputMenu v-model="formState.village" :items="getVillageList" value-key="village" label-key="village" required open-on-focus placeholder="Pilih Kelurahan"/>
             </UFormField>
             <UFormField label="Alamat*" name="village">
-              <UTextarea v-model="formState.address" />
+              <UTextarea v-model="formState.address" placeholder="Detail Alamat"/>
             </UFormField>
             <UFormField label="Kode Pos*" name="postalCode">
               <UInput v-model="formState.postalCode" required/>
             </UFormField>
             <div class="grid grid-cols-2 gap-4 w-full">
               <UFormField label="Normor Ponsel*" name="phone">
-                <UInput v-model="formState.phoneNumber" type="phone" required/>
+                <UInput v-model="formState.phoneNumber" type="phone" required placeholder="Contoh: 081234567890"/>
               </UFormField>
               <UFormField label="Email*" name="email">
-                <UInput v-model="formState.email" type="email" required/>
+                <UInput v-model="formState.email" type="email" required placeholder="Contoh: alamat@email.com"/>
               </UFormField>
             </div>
             
@@ -180,7 +180,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       console.log(error);
     }
   }
-  close()
+  openModalKoranAddress.value = false
 }
 
 

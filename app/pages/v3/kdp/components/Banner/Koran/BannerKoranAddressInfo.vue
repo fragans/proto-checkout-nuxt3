@@ -25,8 +25,10 @@
       </div>
     </template>
     <template #leading>
-      <Icon name="fa7-solid:circle-info" class="text-orange-40 text-[12.5px]" />
-      <span> Saat ini pengiriman koran cetak tidak melayani area berikut. </span>
+      <div class="flex space-x-1 items-center">
+        <Icon name="fa7-solid:circle-info" class="text-orange-40 text-[12.5px]" />
+        <span> Saat ini pengiriman koran cetak tidak melayani area berikut. <span class="text-(--ui-color-primary) cursor-pointer font-bold">Selengkapnya</span> </span>
+      </div>
     </template>
   </UAccordion>
 </template>

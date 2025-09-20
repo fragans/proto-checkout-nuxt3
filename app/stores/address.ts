@@ -25,6 +25,23 @@ export const useAddressStore = defineStore('address', {
     isGuestAddress: false
   }),
   getters: {
+    getDefaultAddress(state): Address | undefined{
+      const [first] = state.userAddressList
+      if (state.userAddressList.length > 0 && state.isGuestAddress) {
+        return first  
+      }
+      const userAddress = state.userAddressList.find(item => item.isDefault === true)
+      if (!userAddress) return first
+      return userAddress  
+    },
+    isShippingAddressInvalid(state): boolean {
+      return state.isGuestAddress
+      // if (!this.detailProduct.variants) { return }
+
+      // this.setValidArea(this.detailProduct.variants.map(variant => variant.area))
+
+      // this.isShippingAddressInvalid = !this.detailProduct.variants.some(variant => variant.area === area)
+    }
   },
   actions: {
     reset() {

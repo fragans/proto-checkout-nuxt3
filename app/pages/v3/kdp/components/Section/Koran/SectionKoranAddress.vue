@@ -10,11 +10,10 @@
     </div>
 
     <div :class="detailProduct?.isKoran ? 'w-full' : ''">
-      <div v-if="(userAddressList.length >= 1 && detailProduct?.isKoran && isLoggedIn) || isGuestAddress"> customer address</div>
+      <CardKoranAddressPreview />
+      <ModalKoranAddress v-if="!getDefaultAddress"/>
 
-      <ModalKoranAddress />
-
-      <div v-if="isShippingAddressEmpty" ref="errorAddressEmptyText" class="flex space-x-1 mt-2">
+      <div v-if="!getDefaultAddress" ref="errorAddressEmptyText" class="flex space-x-1 mt-2">
         <span class="text-red-40 text-xs">Alamat harus diisi.</span>
       </div>
       <div v-else-if="isShippingAddressInvalid" ref="errorAddressInvalidText" class="flex space-x-1 mt-2">
@@ -41,14 +40,11 @@
 const checkoutStore = useCheckoutStore()
 const { detailProduct } = storeToRefs(checkoutStore)
 
-const authStore = useAuthStore()
-const { isLoggedIn } = storeToRefs(authStore)
-
 const addressStore = useAddressStore()
-const { userAddressList, isGuestAddress, openModalKoranAddress } = storeToRefs(addressStore)
+const { openModalKoranAddress, getDefaultAddress } = storeToRefs(addressStore)
 
 const isShippingAddressInvalid = ref(false)
-const isShippingAddressEmpty = ref(true)
+
 const validArea = ref('')
 
 function redirectToBerlangganan () {
