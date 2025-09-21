@@ -19,7 +19,7 @@
     ]"
     @click="openModalAddress"
   >
-    <div class="flex flex-row">
+    <div class="flex flex-row gap-3">
       <icon
         name="fa7-solid:map-marked-alt"
         class="text-md text-blue-60 pr-3 pt-1"

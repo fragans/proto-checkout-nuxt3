@@ -1,5 +1,5 @@
 <template>
-  <div class="mx-auto text-grey-60">
+  <div class="text-grey-60">
     <div>
       <strong class="text-lg md:text-xl font-bold mb-2">
         Alamat Pengiriman
