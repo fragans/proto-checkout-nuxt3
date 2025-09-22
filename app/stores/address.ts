@@ -130,6 +130,18 @@ export const useAddressStore = defineStore('address', {
     },
     setCheckoutEmail(payload: string) {
       this.checkoutEmail = payload
+    },
+    getAddressString (addressObject: Address| undefined) {
+      if (!addressObject) return ''
+      const {
+        address: stringAddress,
+        village,
+        district,
+        city,
+        province,
+        postalCode
+      } = addressObject
+      return `${stringAddress}, ${village}, ${district}, ${city}, ${province}, ${postalCode}`
     }
   }
 })
