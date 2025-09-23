@@ -133,12 +133,12 @@
 <script lang="ts" setup>
 import * as z from 'zod'
 import type { FormSubmitEvent } from '@nuxt/ui'
+import { fetchUserAddress, insertUserAddress } from '~~/utils/apiRepo'
 
-const nuxtApp = useNuxtApp()
 const addressStore = useAddressStore()
 const { isGuestAddress, openModalKoranAddress, provinceList } = storeToRefs(addressStore)
 const authStore = useAuthStore()
-const { isLoggedIn, userGuid } = storeToRefs(authStore)
+const { isLoggedIn } = storeToRefs(authStore)
 const formState = reactive<Partial<Schema>>({
   firstName: undefined,
   lastName: undefined,
@@ -165,6 +165,18 @@ const schema = z.object({
 });
 type Schema = z.output<typeof schema>
 
+
+
+const { 
+  execute: executeInsertUserAddress, // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  data: dataInsertAddress, 
+  status: statusInsertAddress } = insertUserAddress(formState)
+
+const { 
+  execute: executeFetchUserAddress,
+  data: dataFetchUserAddress, // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  status: statusFetchUserAddress } = fetchUserAddress()
+
 const getCityList = computed<City[]>(()=>{
   const selectedProvince = provinceList.value.find(province => province.province === formState.province)
   if (selectedProvince) return selectedProvince?.cities
@@ -183,30 +195,6 @@ const getVillageList = computed<Village[]>(()=>{
   return []
 })
 
-const { execute: fetchUserAddress } = useAsyncData(
-  computed(() => `user-address-${userGuid.value}`),
-  async () => {
-    const response = await nuxtApp.$apiOrder<ApiResponse<Address[], null>>(`/user-address`)
-    if (response.data) { addressStore.setUserAddressList(response.data) }
-    return response
-  },
-  {
-    server: false,
-    immediate: false
-  }
-)
-
-const { execute: insertAddress, status: statusInsertAddress } = useAsyncData(
-  computed(() => `add-address-${new Date().toISOString()}`),
-  async () => {
-    const response= await useNuxtApp().$apiOrder<ApiResponse<Province[], null>>(`/user-address`, { method: 'POST', body: formState })
-    return response
-  },
-  {
-    immediate: false,
-    server: false
-  }
-)
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   console.log(event.data)
   if (!isLoggedIn.value) {
@@ -215,9 +203,12 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     addressStore.setFakturAddress(event.data)
   } else {
     try {
-      await insertAddress()
+      await executeInsertUserAddress()
       if (statusInsertAddress.value === 'success') {
-        await fetchUserAddress()
+        await executeFetchUserAddress()
+        if (dataFetchUserAddress.value?.data) {
+          addressStore.setUserAddressList(dataFetchUserAddress.value.data)
+        }
         // this.resetFormData()
       }
     } catch (error) {
@@ -255,7 +246,3 @@ watch(
   }
 )
 </script>
-
-<style>
-
-</style>

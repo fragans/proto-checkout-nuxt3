@@ -1,41 +1,29 @@
 <template>
   <ClientOnly>
     <SectionPaymentHeader />
-    <CardSubscriptionSummary />
+    <SubscriptionSummary role="card"/>
     <SectionKoran />
   </ClientOnly>
 </template>
 
 <script setup lang="ts">
-const nuxtApp = useNuxtApp()
+import { fetchDetailProduct, fetchCheckoutJson } from '~~/utils/apiRepo';
 const $route = useRoute()
+const { execute: executeFetchDetailProduct, data: dataDetailProduct } = fetchDetailProduct($route.query.productId as string)
+const { execute: executeFetchCheckoutJson, data: dataCheckoutJson} = fetchCheckoutJson()
 const checkoutStore = useCheckoutStore()
 
-// const { isAutoRenewal } = storeToRefs(checkoutStore)
-const { CHECKOUT_JSON_URL } = useRuntimeConfig().public
 
 useAsyncData(
-  computed(() => `detail-product-${$route.query.productId}`),
-  async () => {
-    const response = await nuxtApp.$apiOrder<ApiResponse<KdpProductDetail, null>>(`/product?id=${$route.query.productId}`)
-    if (response.data) { checkoutStore.setDetailProduct(response.data) }
-    return response
-  },
-  {
-    server: false
+  'main-api',
+  async() => {
+    await executeFetchDetailProduct()
+    if (dataDetailProduct.value?.data) checkoutStore.setDetailProduct(dataDetailProduct.value?.data)
+    await executeFetchCheckoutJson()
+    if (dataCheckoutJson.value?.data) checkoutStore.setCheckoutJson(dataCheckoutJson.value?.data)
   }
 )
-
-useAsyncData(
-  'checkout-json',
-  async () => {
-    const response = await $fetch<CheckoutJsonResponse>(CHECKOUT_JSON_URL)
-    if (response.data) { checkoutStore.setCheckoutJson(response.data) }
-    return response
-  }
-)
-
-
+  
 
 useHead({
   title: 'Checkout Page v3'

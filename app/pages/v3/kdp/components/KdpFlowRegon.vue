@@ -2,7 +2,7 @@
   <div>
     <span class="text-grey-40">Regon Flow</span>
     <SectionPaymentHeader />
-    <CardSubscriptionSummary />
+    <SubscriptionSummary />
     <SectionKoran />
   </div>
 </template>

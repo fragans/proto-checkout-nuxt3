@@ -10,23 +10,13 @@
 </template>
 
 <script setup lang="ts">
-const nuxtApp = useNuxtApp()
-
-const authStore = useAuthStore()
+import { fetchUserAddress } from '~~/utils/apiRepo';
 const address = useAddressStore()
 const checkoutStore = useCheckoutStore()
 const { detailProduct } = storeToRefs(checkoutStore)
-const { userGuid } = storeToRefs(authStore)
 
-useAsyncData(
-  computed(() => `user-address-${userGuid.value}`),
-  async () => {
-    const response = await nuxtApp.$apiOrder<ApiResponse<Address[], null>>(`/user-address`)
-    if (response.data) { address.setUserAddressList(response.data) }
-    return response
-  },
-  {
-    server: false
-  }
-)
+const { data: userAddress } = await fetchUserAddress()
+if (userAddress.value?.data) {
+  address.setUserAddressList(userAddress.value.data)
+}
 </script>

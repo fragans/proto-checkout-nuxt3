@@ -62,7 +62,7 @@
           </div>
         </div>
       </div>
-      <CardSubscriptionWarning class="pt-4" />
+      <SubscriptionWarning class="pt-4" role="card"/>
     </div>
   </div>
 </template>

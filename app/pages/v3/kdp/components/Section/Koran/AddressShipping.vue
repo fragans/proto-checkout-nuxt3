@@ -1,15 +1,13 @@
 <template>
   <div class="text-grey-60">
     <div>
-      <strong class="text-lg md:text-xl font-bold mb-2">
-        Alamat Pengiriman
-      </strong>
+      <strong class="text-lg md:text-xl font-bold mb-2"> Alamat Pengiriman </strong>
       <p class="text-grey-40 mb-6">
         Alamat pengiriman digunakan untuk keperluan pengiriman produk Harian Kompas
       </p>
     </div>
 
-    <div :class="detailProduct?.isKoran ? 'w-full' : ''">
+    <div class="w-full">
       <AddressPreview
         role="card"
       />
@@ -23,13 +21,19 @@
       </div>
       <div v-else-if="isShippingAddressInvalid" ref="errorAddressInvalidText" class="flex space-x-1 mt-2">
         <span class="text-red-40 text-xs">
-          Paket langganan ini hanya berlaku untuk pengiriman wilayah <strong>{{ validArea }}</strong>.
-          Silakan <span class="cursor-pointer" @click="openModalAddress"><strong><u>ubah alamat pengiriman</u></strong></span> ke wilayah {{ validArea }}
-          atau ganti ke <strong><u><span class="cursor-pointer" @click="redirectToBerlangganan">paket lainnya</span></u></strong>.
+          Paket langganan ini hanya berlaku untuk pengiriman wilayah 
+          <strong>{{ validArea }}</strong>.
+          Silahkan <span class="cursor-pointer" @click="openModalAddress">
+          <strong>
+          <u>ubah alamat pengiriman</u>
+          </strong>
+        </span> 
+          ke wilayah {{ validArea }} atau ganti ke 
+          <strong><u><span class="cursor-pointer" @click="redirectToBerlangganan">paket lainnya</span></u></strong>.
         </span>
       </div>
       <div class="bg-orange-10 rounded-md">
-        <AddressInfo v-if="detailProduct?.isKoran" class="mt-5 px-4" role="banner"/>
+        <AddressInfo class="mt-5 px-4" role="banner"/>
       </div>
 
     </div>
@@ -40,6 +44,7 @@
 </template>
 
 <script lang="ts" setup>
+import { fetchAddressProvinces } from '~~/utils/apiRepo';
 
 
 const checkoutStore = useCheckoutStore()
@@ -90,20 +95,13 @@ function openModalAddress () {
   openModalKoranAddress.value = true
   
 }
-const url = 'https://api.kompas.id/account/api/v1/countries/region/id'
-useAsyncData(
-  computed(() => `address-provinces`),
-  async () => {
-    const response = await $fetch<ApiResponse<Province[], null>>(url)
-    if (response.data) addressStore.setProvinceList(response.data) 
-    return response
-  },
-  {
-    server: false
-  }
-)
+const { data:provinces,
+  execute:executeFetchAddressProvinces,
+  status:statusFetchAddressProvices
+} = await fetchAddressProvinces()
+
+await executeFetchAddressProvinces()
+if (provinces.value?.data && statusFetchAddressProvices.value === 'success') {
+  addressStore.setProvinceList(provinces.value.data)
+}
 </script>
-
-<style>
-
-</style>
