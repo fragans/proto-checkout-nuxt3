@@ -1,16 +1,11 @@
 @import "tailwindcss";
-@layer theme, base, components, utilities;
-@import "~/assets/styles/theme.css" layer(theme);
-@import "tailwindcss/preflight.css" layer(base);
-@import "tailwindcss/utilities.css" layer(utilities);
-
-
+@import "~/assets/styles/theme.css";
 @import "@nuxt/ui";
 
-:root {
+/* :root {
   color: @theme(--color-gray-600);
-  --ui-text: theme(--color-gray-600);
-  --ui-bg: theme(--color-white);
+  --ui-text: @theme(--color-gray-600);
+  --ui-bg: @theme(--color-white);
   --background-color-default: var(--ui-bg);
 
 
@@ -21,10 +16,13 @@
   --ui-text-highlighted: var(--ui-color-neutral-900);
   --ui-text-inverted: var(--color-white);
   --ui-radius: 0.25rem;
-
-  --ui-color-primary: @theme(--color-brand-1)
-}
+} */
 
 [data-reka-collapsible-content] {
   --reka-collapsible-content-height: auto !important;
+}
+@layer base {
+  body {
+    color: var(--color-brand-1);
+  }
 }

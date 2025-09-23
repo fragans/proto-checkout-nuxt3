@@ -1,4 +1,4 @@
-@theme default {
+@theme {
   --font-sans: "PT Sans", Arial, Verdana, Helvetica, sans-serif;
   --font-serif: Lora, serif;
   --font-system: Georgia, Times New Roman, Times, serif
@@ -9,7 +9,8 @@
   /* Brand */
   --color-brand-1: #00559A;
   --color-brand-2: #00447B;
-
+  --color-primary: #00559A;
+  
   /* Blue */
   --color-blue-10: #E1F0FF;
   --color-blue-20: #93C8FD;

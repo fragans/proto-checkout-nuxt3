@@ -52,6 +52,7 @@ const addressStore = useAddressStore()
 const authStore = useAuthStore()
 const { isLoggedIn, userGuid } = storeToRefs(authStore)
 const { userAddressList, isAddressFull, openModalListAddress, openModalInputAddress } = storeToRefs(addressStore)
+const toast = useToast()
 
 
 const { execute: executeFetchUserAddress, data: dataFetchUserAddress } = fetchUserAddress(userGuid.value)
@@ -78,6 +79,10 @@ async function setAddressToDefault (id: number | undefined) {
     if (dataFetchUserAddress.value?.data) {
       addressStore.setUserAddressList(dataFetchUserAddress.value.data)
       openModalListAddress.value = false
+      toast.add({
+        title: 'Alamat Utama Diperbarui',
+        description: 'Alamat utama pengguna berhasil diperbarui dan akan digunakan sebagai alamat pengiriman default.',
+      })
     }
   }
 }

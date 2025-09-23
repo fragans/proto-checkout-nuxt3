@@ -1,4 +1,9 @@
 export default defineAppConfig({
+  toaster: {
+    position: 'top-center' as const,
+    expand: true,
+    duration: 5000
+  },
   ui: {
     colorMode: false,
     colors: {
@@ -27,6 +32,13 @@ export default defineAppConfig({
     modal: {
       slots: {
         footer: 'flex justify-start',
+      },
+      variants: {
+        fullscreen: {
+          false: {
+            content: 'max-w-2xl mx-auto',
+          }
+        }
       }
     },
     accordion: {
@@ -40,6 +52,6 @@ export default defineAppConfig({
           
         }
       }
-    }
+    },
   }
 })

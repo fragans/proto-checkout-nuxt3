@@ -3,7 +3,7 @@
     class="border border-grey-30 p-6 rounded mb-6 flex flex-row justify-between w-full items-start"
     :class="props.isDefault ? 'bg-grey-10' : ''"
   >
-    <div class="flex flex-col">
+    <div class="flex flex-col w-full">
       <div>
         <strong 
           v-if="props.isDefault || !props.isLoggedIn"
@@ -11,28 +11,30 @@
         >
           Alamat Terpilih
         </strong>
-        <div class="flex flex-row w-full gap-3">
+        <div class="flex flex-row w-full gap-3 items-center">
           <icon
             name="fa7-solid:map-marked-alt"
             class="text-md text-blue-60 pr-3 pt-1"
           />
-          <div class="flex flex-col">
+          <div class="flex flex-col w-full">
             <strong>{{ props.firstName + ' ' + props.lastName }}</strong>
             <p>{{ props.phoneNumber }}</p>
             <p>{{ props.addressConcated }}</p>
-            <div class="flex flex-col md:flex-row md:space-x-4 mt-4">
+            <div class="flex flex-col md:flex-row gap-4 mt-4">
               <UButton
                 v-if="!props.isDefault && props.isLoggedIn"
+                block
                 @click="() => setAddressToDefault(props.num)"
               >
-                <span class="text-sm">Jadikan Alamat Pengiriman</span>
+                <p class="text-sm text-center">Jadikan Alamat Pengiriman</p>
               </UButton>
               <UButton
                 variant="outline"
                 color="primary"
+                block
                 @click="handleModalEdit(props.num)" 
               >
-                <span>Ubah Alamat</span>
+                <p class="text-center">Ubah Alamat</p>
               </UButton>
             </div>
           </div>
