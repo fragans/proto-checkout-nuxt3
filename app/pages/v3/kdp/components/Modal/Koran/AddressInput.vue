@@ -20,7 +20,7 @@
       </UButton>
 
       <template #body="{ close }">
-        <UForm :state="formState" :schema="schema" @submit="onSubmit">
+        <UForm :state="formState" :schema="schema" aria-autocomplete="none" autocomplete="off" @submit="onSubmit">
           <div class="flex flex-col gap-4">
             <div class="grid grid-cols-2 gap-4 w-full">
               <UFormField label="Nama Depan*" name="firstName">
@@ -183,7 +183,7 @@ const getVillageList = computed<Village[]>(()=>{
   return []
 })
 
-const {execute: fetchUserAddress} = useAsyncData(
+const { execute: fetchUserAddress } = useAsyncData(
   computed(() => `user-address-${userGuid.value}`),
   async () => {
     const response = await nuxtApp.$apiOrder<ApiResponse<Address[], null>>(`/user-address`)

@@ -1,20 +1,16 @@
 <template>
   <ClientOnly>
-    <div v-if="isLoggedIn">
-      <KdpFlowSubscriber v-if="authStore.getIsSubscriber" />
-      <KdpFlowRegon v-else />
-    </div>
-    <KdpFlowGuest v-else />
+    <SectionPaymentHeader />
+    <CardSubscriptionSummary />
+    <SectionKoran />
   </ClientOnly>
 </template>
 
 <script setup lang="ts">
 const nuxtApp = useNuxtApp()
 const $route = useRoute()
-const authStore = useAuthStore()
 const checkoutStore = useCheckoutStore()
 
-const { isLoggedIn } = storeToRefs(authStore)
 // const { isAutoRenewal } = storeToRefs(checkoutStore)
 const { CHECKOUT_JSON_URL } = useRuntimeConfig().public
 

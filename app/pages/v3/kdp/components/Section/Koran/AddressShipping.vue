@@ -10,8 +10,13 @@
     </div>
 
     <div :class="detailProduct?.isKoran ? 'w-full' : ''">
-      <CardKoranAddressPreview />
-      <ModalKoranAddress v-if="!getDefaultAddress"/>
+      <AddressPreview
+        role="card"
+      />
+      <AddressInput
+        v-if="!getDefaultAddress"
+        role="modal"
+      />
 
       <div v-if="!getDefaultAddress" ref="errorAddressEmptyText" class="flex space-x-1 mt-2">
         <span class="text-red-40 text-xs">Alamat harus diisi.</span>
@@ -24,7 +29,7 @@
         </span>
       </div>
       <div class="bg-orange-10 rounded-md">
-        <BannerKoranAddressInfo v-if="detailProduct?.isKoran" class="mt-5 px-4" />
+        <AddressInfo v-if="detailProduct?.isKoran" class="mt-5 px-4" role="banner"/>
       </div>
 
     </div>

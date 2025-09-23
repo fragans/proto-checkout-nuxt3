@@ -26,7 +26,7 @@
   </div>
     <template #body>
       <div class="flex flex-col gap-4">
-        <ModalKoranAddress/>
+        <AddressInfo />
         <div
           v-if="!isAddressFull"
           ref="fullAddressSection"
