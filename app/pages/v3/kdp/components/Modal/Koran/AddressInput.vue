@@ -1,24 +1,9 @@
 <template>
   <UModal
-    v-model:open="openModalKoranAddress"
+    v-model:open="openModalInputAddress"
     title="Alamat Pengiriman"
     description="Alamat Pengiriman digunakan untuk keperluan pengiriman produk Harian Kompas."
     >
-      <UButton
-        block
-        variant="outline"
-        color="primary"
-        size="xl"
-      >
-        <Icon
-          name="fa7-solid:circle-plus"
-          class="text-md text-blue-60 flex pr-4 pt-1"
-        />
-        <strong class="flex text-blue-60">
-          Buat Alamat Pengiriman
-        </strong>
-      </UButton>
-
       <template #body="{ close }">
         <UForm :state="formState" :schema="schema" aria-autocomplete="none" autocomplete="off" @submit="onSubmit">
           <div class="flex flex-col gap-4">
@@ -39,6 +24,7 @@
                 required
                 open-on-focus
                 placeholder="Pilih Provinsi"
+                @change="addressStore.handleProvinceChange(formState.province)"
               />
             </UFormField>
             <UFormField label="Kabupaten/Kota*" name="city">
@@ -136,7 +122,7 @@ import type { FormSubmitEvent } from '@nuxt/ui'
 import { fetchUserAddress, insertUserAddress } from '~~/utils/apiRepo'
 
 const addressStore = useAddressStore()
-const { isGuestAddress, openModalKoranAddress, provinceList } = storeToRefs(addressStore)
+const { isGuestAddress, openModalInputAddress, provinceList } = storeToRefs(addressStore)
 const authStore = useAuthStore()
 const { isLoggedIn } = storeToRefs(authStore)
 const formState = reactive<Partial<Schema>>({
@@ -215,7 +201,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       console.log(error);
     }
   }
-  openModalKoranAddress.value = false
+  openModalInputAddress.value = false
 }
 
 watch(

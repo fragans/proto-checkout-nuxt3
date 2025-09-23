@@ -20,7 +20,7 @@ export interface KdpProductDetail {
   isPartnerSubs: boolean;
   isKoran: boolean;
   isVariant: boolean;
-  variants: Variant[] | null;
+  variants: Variant[];
 }
 
 export interface Coupons {

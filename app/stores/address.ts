@@ -12,7 +12,6 @@ export const useAddressStore = defineStore('address', {
     isInvoice: false,
     dateKoran: '',
     isProductKoran: false,
-    detailProduct: {} as KdpProductDetail,
     addressId: 0,
     fakturPajak: {
       npwp: '',
@@ -20,9 +19,13 @@ export const useAddressStore = defineStore('address', {
       address: ''
     } as IFakturPajak,
     checkoutEmail: '',
-    openModalKoranAddress: false,
+    openModalInputAddress: false,
+    openModalListAddress: false,
+    openModalEditAddress: false,
     provinceList: [] as Province[],
-    isGuestAddress: false
+    isGuestAddress: false,
+    // ini knp nebeng di store address?
+    detailProduct: null as null | KdpProductDetail
   }),
   getters: {
     getDefaultAddress(state): Address | undefined{
@@ -35,12 +38,38 @@ export const useAddressStore = defineStore('address', {
       return userAddress  
     },
     isShippingAddressInvalid(state): boolean {
-      return state.isGuestAddress
-      // if (!this.detailProduct.variants) { return }
+      if (!state.detailProduct) return false
+      const variants = state.detailProduct.variants
+      if (variants.length === 0) return false
+      return !variants.some(variant => variant.area === this.area)
+    },
+    isAddressFull (state): boolean {
+      return state.userAddressList.length <= 5
+    },
+    getValidAreaInfo(state): string {
+      if (!state.detailProduct?.variants) { return '' }
 
-      // this.setValidArea(this.detailProduct.variants.map(variant => variant.area))
+      const areas = state.detailProduct.variants.map(variant => variant.area)
 
-      // this.isShippingAddressInvalid = !this.detailProduct.variants.some(variant => variant.area === area)
+      let validArea:string = ''
+      
+      if (areas.includes(1) && areas.includes(2) && areas.includes(3)) {
+        validArea = 'Pulau Jawa, Pulau Bali, Luar Pulau Jawa & Bali'
+      } else if (areas.includes(1) && areas.includes(2)) {
+        validArea = 'Pulau Jawa & Bali'
+      } else if (areas.includes(1) && areas.includes(3)) {
+        validArea = 'Pulau Jawa, Luar Pulau Jawa & Bali'
+      } else if (areas.includes(2) && areas.includes(3)) {
+        validArea = 'Pulau Bali, Luar Pulau Jawa & Bali'
+      } else if (areas.includes(1)) {
+        validArea = 'Pulau Jawa'
+      } else if (areas.includes(2)) {
+        validArea = 'Pulau Bali'
+      } else if (areas.includes(3)) {
+        validArea = 'Luar Pulau Jawa & Bali'
+      }
+
+      return validArea
     }
   },
   actions: {
@@ -70,9 +99,7 @@ export const useAddressStore = defineStore('address', {
     setProvinceList(payload: Province[]) {
       this.provinceList = payload
     },
-    setProvince(payload: string) {
-      this.userProvince = payload
-
+    handleProvinceChange(payload: string| undefined) {
       const jawaBaliProvinces = [
         'Banten',
         'DKI Jakarta',
@@ -82,28 +109,27 @@ export const useAddressStore = defineStore('address', {
         'Jawa Timur',
         'Bali'
       ]
-
+      if (!payload) {
+        this.isJawaBali = false
+        this.shippingCost = 0
+        return
+      }
+      
+      if (jawaBaliProvinces.includes(payload)) {
+        this.isJawaBali = true
+      } else {
+        this.isJawaBali = false
+      }
       const isJawa = jawaBaliProvinces.slice(0, -1).includes(payload)
       const isBali = payload === 'Bali'
 
       this.area = isJawa ? 1 : isBali ? 2 : 3
 
-      if (this.detailProduct.isVariant) {
+      if (this.detailProduct?.isVariant) {
         const variant = this.detailProduct.variants?.find(variant => variant.area === this.area)
         this.shippingCost = variant ? variant.shippingPrice : this.detailProduct.shippingPrice
       } else {
-        this.shippingCost = this.detailProduct.shippingPrice
-      }
-
-      if (this.userProvince !== '') {
-        if (jawaBaliProvinces.includes(payload)) {
-          this.isJawaBali = true
-        } else {
-          this.isJawaBali = false
-        }
-      } else {
-        this.isJawaBali = false
-        this.shippingCost = 0
+        this.shippingCost = this.detailProduct?.shippingPrice ?? 0
       }
     },
     setShippingCost(payload: number) {
@@ -142,6 +168,26 @@ export const useAddressStore = defineStore('address', {
         postalCode
       } = addressObject
       return `${stringAddress}, ${village}, ${district}, ${city}, ${province}, ${postalCode}`
+    },
+    setValidArea (areas: number[]) {
+    let validArea = ''
+    if (areas.includes(1) && areas.includes(2) && areas.includes(3)) {
+      validArea = 'Pulau Jawa, Pulau Bali, Luar Pulau Jawa & Bali'
+    } else if (areas.includes(1) && areas.includes(2)) {
+      validArea = 'Pulau Jawa & Bali'
+    } else if (areas.includes(1) && areas.includes(3)) {
+      validArea = 'Pulau Jawa, Luar Pulau Jawa & Bali'
+    } else if (areas.includes(2) && areas.includes(3)) {
+      validArea = 'Pulau Bali, Luar Pulau Jawa & Bali'
+    } else if (areas.includes(1)) {
+      validArea = 'Pulau Jawa'
+    } else if (areas.includes(2)) {
+      validArea = 'Pulau Bali'
+    } else if (areas.includes(3)) {
+      validArea = 'Luar Pulau Jawa & Bali'
     }
+
+    return validArea
+  }
   }
 })

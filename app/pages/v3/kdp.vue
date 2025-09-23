@@ -12,13 +12,18 @@ const $route = useRoute()
 const { execute: executeFetchDetailProduct, data: dataDetailProduct } = fetchDetailProduct($route.query.productId as string)
 const { execute: executeFetchCheckoutJson, data: dataCheckoutJson} = fetchCheckoutJson()
 const checkoutStore = useCheckoutStore()
+const addressStore = useAddressStore()
 
 
 useAsyncData(
   'main-api',
   async() => {
     await executeFetchDetailProduct()
-    if (dataDetailProduct.value?.data) checkoutStore.setDetailProduct(dataDetailProduct.value?.data)
+    if (dataDetailProduct.value?.data) {
+      checkoutStore.setDetailProduct(dataDetailProduct.value?.data)
+      addressStore.setDetailProduct(dataDetailProduct.value?.data)
+    }
+
     await executeFetchCheckoutJson()
     if (dataCheckoutJson.value?.data) checkoutStore.setCheckoutJson(dataCheckoutJson.value?.data)
   }

@@ -10,11 +10,6 @@ export const useCheckoutStore = defineStore('checkout', {
     isAutoRenewal: false
   }),
   getters: {
-    getValidArea(state): number[] {
-      if (!state.detailProduct) return []
-      if (!state.detailProduct.variants) return []
-      return state.detailProduct.variants.map(variant => variant.area)
-    }
     // getPaymentOptionList(state): PaymentOption[] {
     //   return state.checkout.payment_options
     // },
@@ -29,7 +24,7 @@ export const useCheckoutStore = defineStore('checkout', {
     // }
   },
   actions: {
-
+    
     // async fetchAutoApplyCouponRenewal(payload: CouponPayload) {
     //   const payload = this.generateCouponPayload(1)
     //   const coupons = await $fetch<CouponData>(`/servicePromotion/coupon/search?uuid=${this.checkout.auto_apply_renewal.coupon_uuid}`, {
