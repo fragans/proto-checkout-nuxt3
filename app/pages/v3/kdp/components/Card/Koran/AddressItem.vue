@@ -1,6 +1,6 @@
 <template>
   <div
-    class="border border-grey-30 p-6 rounded mb-6 flex flex-row justify-between w-full items-start"
+    class="border border-grey-30 p-6 rounded flex flex-row justify-between w-full items-start"
     :class="props.isDefault ? 'bg-grey-10' : ''"
   >
     <div class="flex flex-col w-full">

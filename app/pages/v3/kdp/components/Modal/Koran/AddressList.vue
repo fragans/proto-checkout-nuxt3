@@ -7,7 +7,7 @@
     <template #body>
       <div class="flex flex-col gap-4">
         <UButton
-          v-if="isLoggedIn"
+          v-if="isLoggedIn && !isAddressFull"
           block
           variant="outline"
           color="primary"
