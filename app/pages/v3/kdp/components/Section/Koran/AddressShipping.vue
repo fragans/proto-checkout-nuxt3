@@ -31,7 +31,7 @@
       <div v-if="!getDefaultAddress" ref="errorAddressEmptyText" class="flex space-x-1 mt-2">
         <span class="text-red-40 text-xs">Alamat harus diisi.</span>
       </div>
-      <div v-else-if="isShippingAddressInvalid" ref="errorAddressInvalidText" class="flex space-x-1 mt-2">
+      <div v-else-if="!isShippingAddressInvalid" ref="errorAddressInvalidText" class="flex space-x-1 mt-2">
         <span class="text-red-40 text-xs">
           Paket langganan ini hanya berlaku untuk pengiriman wilayah 
           <strong>{{ getValidAreaInfo }}</strong>.

@@ -2,7 +2,7 @@
   <div
     v-if="userAddressList.length >= 1"
     class="flex p-6 mb-2 flex-row w-full shadow-md rounded-md cursor-pointer justify-between text-grey-60"
-    :class="[isShippingAddressInvalid ? 'border border-red-30' : 'border border-grey-30',]"
+    :class="[!isShippingAddressInvalid ? 'border border-red-30' : 'border border-grey-30',]"
     @click="handleCardClick"
   >
     <div class="flex flex-row gap-3 items-center">

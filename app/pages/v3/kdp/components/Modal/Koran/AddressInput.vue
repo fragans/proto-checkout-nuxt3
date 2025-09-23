@@ -124,7 +124,7 @@ import { fetchUserAddress, insertUserAddress } from '~~/utils/apiRepo'
 const addressStore = useAddressStore()
 const { isGuestAddress, openModalInputAddress, provinceList } = storeToRefs(addressStore)
 const authStore = useAuthStore()
-const { isLoggedIn } = storeToRefs(authStore)
+const { isLoggedIn, userGuid } = storeToRefs(authStore)
 const formState = reactive<Partial<Schema>>({
   firstName: undefined,
   lastName: undefined,
@@ -161,7 +161,7 @@ const {
 const { 
   execute: executeFetchUserAddress,
   data: dataFetchUserAddress, // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  status: statusFetchUserAddress } = fetchUserAddress()
+  status: statusFetchUserAddress } = fetchUserAddress(userGuid.value)
 
 const getCityList = computed<City[]>(()=>{
   const selectedProvince = provinceList.value.find(province => province.province === formState.province)

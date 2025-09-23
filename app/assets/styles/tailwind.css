@@ -21,6 +21,8 @@
   --ui-text-highlighted: var(--ui-color-neutral-900);
   --ui-text-inverted: var(--color-white);
   --ui-radius: 0.25rem;
+
+  --ui-color-primary: @theme(--color-brand-1)
 }
 
 [data-reka-collapsible-content] {

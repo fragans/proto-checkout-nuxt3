@@ -28,12 +28,37 @@ export const useAddressStore = defineStore('address', {
     detailProduct: null as null | KdpProductDetail
   }),
   getters: {
-    getDefaultAddress(state): Address | undefined{
+    getCurrentArea(state): number {
+      if (state.userAddressList.length === 0) return 0
+      const userProvince = this.getDefaultAddress?.province
+      if (!userProvince) return 0
+      const jawaBaliProvinces = [
+        'Banten',
+        'DKI Jakarta',
+        'Jawa Barat',
+        'Jawa Tengah',
+        'Daerah Istimewa Yogyakarta',
+        'Jawa Timur',
+        'Bali'
+      ]
+      
+      if (jawaBaliProvinces.includes(userProvince)) {
+        this.isJawaBali = true
+      } else {
+        this.isJawaBali = false
+      }
+      const isJawa = jawaBaliProvinces.slice(0, -1).includes(userProvince)
+      const isBali = userProvince === 'Bali'
+
+      return isJawa ? 1 : isBali ? 2 : 3
+    },
+    getDefaultAddress(state): Address | undefined {
       const [first] = state.userAddressList
       if (state.userAddressList.length > 0 && state.isGuestAddress) {
         return first  
       }
       const userAddress = state.userAddressList.find(item => item.isDefault === true)
+
       if (!userAddress) return first
       return userAddress  
     },
@@ -41,12 +66,13 @@ export const useAddressStore = defineStore('address', {
       if (!state.detailProduct) return false
       const variants = state.detailProduct.variants
       if (variants.length === 0) return false
-      return !variants.some(variant => variant.area === this.area)
+      const foundOne = variants.some(variant => variant.area === this.getCurrentArea)
+      return foundOne ?? false
     },
     isAddressFull (state): boolean {
-      return state.userAddressList.length <= 5
+      return state.userAddressList.length >= 5
     },
-    getValidAreaInfo(state): string {
+    getValidAreaInfo (state): string {
       if (!state.detailProduct?.variants) { return '' }
 
       const areas = state.detailProduct.variants.map(variant => variant.area)

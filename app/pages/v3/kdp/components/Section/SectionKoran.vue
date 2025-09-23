@@ -11,12 +11,18 @@
 
 <script setup lang="ts">
 import { fetchUserAddress } from '~~/utils/apiRepo';
+
 const address = useAddressStore()
+
 const checkoutStore = useCheckoutStore()
 const { detailProduct } = storeToRefs(checkoutStore)
 
-const { data: userAddress } = await fetchUserAddress()
-if (userAddress.value?.data) {
-  address.setUserAddressList(userAddress.value.data)
+const authStore = useAuthStore()
+const { userGuid } = storeToRefs(authStore)
+
+const { execute: executeFetchUserAddress, data: dataFetchUserAddress } = fetchUserAddress(userGuid.value)
+await executeFetchUserAddress()
+if (dataFetchUserAddress.value?.data) {
+  address.setUserAddressList(dataFetchUserAddress.value.data)
 }
 </script>

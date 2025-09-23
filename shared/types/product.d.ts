@@ -1,11 +1,12 @@
-export interface Variant {
-  id: number;
+interface Variant {
   area: number;
+  id: number;
+  normalPrice: number;
   price: number;
   shippingPrice: number;
 }
 
-export interface KdpProductDetail {
+interface KdpProductDetail {
   id: number;
   author: string;
   title: string;
@@ -23,7 +24,7 @@ export interface KdpProductDetail {
   variants: Variant[];
 }
 
-export interface Coupons {
+interface Coupons {
   id: number;
   code: string;
   description: string;

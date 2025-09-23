@@ -27,6 +27,7 @@ export default defineNuxtRouteMiddleware( async (to, from) => {
           },
         }
       )
+      console.log('membership',{data});
       
       if (data) {
         authStore.setUserSubscriptionStatus(data.result)

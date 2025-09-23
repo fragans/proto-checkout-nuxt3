@@ -19,9 +19,9 @@ TODO IMPROVEMENT, separate api repository for each module, example:
 /productApiRepository
  */
 
-export function fetchUserAddress() {
+export function fetchUserAddress(userGuid: string) {
   return useAsyncData<ApiResponse<Address[], null>>(
-    `user-address`,
+    `user-address-${userGuid}-${new Date().getTime()}`,
     () => useNuxtApp().$apiOrder(`/user-address`),
     { server: false , immediate: false}
   )
@@ -40,6 +40,16 @@ export function insertUserAddress(payload: Partial<Address>) {
     'insert-user-address',
     () => {
       return useNuxtApp().$apiOrder(`/user-address`, { method: 'POST', body: payload })
+    },
+    { immediate: false, server: false }
+  )
+}
+
+export function setAddressDefault(id: number, guid: string) {
+  return useAsyncData<ApiResponse<Address, null>>(
+    `set-address-default-${guid}`,
+    () => {
+      return useNuxtApp().$apiOrder(`/user-address/default`, { method: 'POST', body: { id } })
     },
     { immediate: false, server: false }
   )
