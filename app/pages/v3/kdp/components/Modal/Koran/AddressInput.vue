@@ -161,7 +161,7 @@ const {
 const { 
   execute: executeFetchUserAddress,
   data: dataFetchUserAddress, // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  status: statusFetchUserAddress } = fetchUserAddress(userGuid.value)
+  status: statusFetchUserAddress } = fetchUserAddress(userGuid.value, false)
 
 const getCityList = computed<City[]>(()=>{
   const selectedProvince = provinceList.value.find(province => province.province === formState.province)
