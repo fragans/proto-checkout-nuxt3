@@ -26,7 +26,7 @@
       </UButton>
       <AddressPreview role="card" />
       <AddressList role="modal" />
-      <AddressInput role="modal" />
+      <AddressForm role="modal" />
 
       <div v-if="!getDefaultAddress" ref="errorAddressEmptyText" class="flex space-x-1 mt-2">
         <span class="text-red-40 text-xs">Alamat harus diisi.</span>
@@ -41,9 +41,9 @@
           <span class="cursor-pointer font-bold underline" @click="redirectToBerlangganan">paket lainnya</span>.
         </span>
       </div>
-      <div class="bg-orange-10 rounded-md">
-        <AddressInfo class="mt-5 px-4" role="banner"/>
-      </div>
+
+      
+      <AddressInfo class="mt-5 px-4" role="banner"/>
 
     </div>
     

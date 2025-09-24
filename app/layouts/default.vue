@@ -2,7 +2,7 @@
   <div class="relative">
     <HeaderDefault />
     <div class="pt-12 min-h-screen mx-auto">
-      <div class="relative max-w-screen-sm lg:max-w-screen-xl mx-auto lg:px-7">
+      <div class="relative max-w-screen-sm lg:max-w-screen-md mx-auto lg:px-7">
         <h4 class="text-xl md:text-2xl pb-2 mt-8 font-bold">
           Rincian Pembayaran
         </h4>

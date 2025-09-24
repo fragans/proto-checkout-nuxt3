@@ -7,6 +7,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   const pinia = getActivePinia()
   const authStore = useAuthStore(pinia)
   const { accessToken } = storeToRefs(authStore)
+  
   const cookieOptions = { domain: SESSION_DOMAIN }
   const cookieToken = useCookie<string>('kompas._token', cookieOptions)
   const cookieRefresh = useCookie<string>('kompas._token_refresh', cookieOptions)

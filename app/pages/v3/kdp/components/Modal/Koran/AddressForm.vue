@@ -182,7 +182,6 @@ const getVillageList = computed<Village[]>(()=>{
 })
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
-  console.log(event.data)
   if (!isLoggedIn.value) {
     isGuestAddress.value = true
     addressStore.setUserAddressList([event.data])
@@ -231,4 +230,8 @@ watch(
     }
   }
 )
+
+defineExpose({
+  formState
+})
 </script>

@@ -10,7 +10,7 @@ Why this works?
 
 goals of this repo: to avoid this warning
 [nuxt] [useAsyncData] Incompatible options detected for "user-address-GUEST"
-(used at http://www.kompas.local:3000/_nuxt/pages/v3/kdp/components/Modal/Koran/AddressInput.vue:70:43):
+(used at http://www.kompas.local:3000/_nuxt/pages/v3/kdp/components/Modal/Koran/AddressForm.vue:70:43):
  - different handler You can use a different key or move the call 
 to a composable to ensure the options are shared across calls.
 
@@ -72,7 +72,7 @@ export function fetchDetailProduct(productId: string) {
   return useAsyncData<ApiResponse<KdpProductDetail, null>>(
     `detail-product-${productId}`,
      () => useNuxtApp().$apiOrder(`/product?id=${productId}`),
-    { server: false , immediate: false}
+    { immediate: false}
   )
 }
 
