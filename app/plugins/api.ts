@@ -91,7 +91,7 @@ export default defineNuxtPlugin(({ $pinia }) => {
       retryStatusCodes: [401],
       onRequest({ options }) {
         const headers = new Headers(options.headers || {})
-        headers.set('Authorization', `Bearer ${accessToken.value}`)
+        headers.set('Authorization', `Bearer ${cookieToken.value}`)
         options.headers = headers
       },
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
