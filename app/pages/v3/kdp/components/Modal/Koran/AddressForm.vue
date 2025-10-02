@@ -7,7 +7,8 @@
     >
       <template #body>
         <div ref="addressForm">
-          <UForm :state="formState" :schema="schema" aria-autocomplete="none" autocomplete="off" @submit="onSubmit">
+          <UForm :state="formState" :schema="schema" aria-autocomplete="none" autocomplete="off" @submit="editMode ? onSubmitEdit() : onSubmit">
+            <UInput v-model="formState.id" type="hidden" />
             <div class="flex flex-col gap-4">
               <div class="grid grid-cols-2 gap-4 w-full">
                 <UFormField label="Nama Depan*" name="firstName">
@@ -95,14 +96,26 @@
               
             </div>
             <div class="gap-4 flex pt-4">
-              <UButton
-                variant="solid"
-                color="success"
-                type="submit"
-                size="lg"
-              >
-                <span class="font-bold text-md">Simpan Alamat</span>
-              </UButton>
+              <template v-if="!editMode">
+                <UButton
+                  variant="solid"
+                  color="success"
+                  type="submit"
+                  size="lg"
+                >
+                  <span class="font-bold text-md">Simpan Alamat</span>
+                </UButton>
+              </template>
+              <template v-else>
+                <UButton
+                  variant="solid"
+                  color="success"
+                  type="submit"
+                  size="lg"
+                >
+                  <span class="font-bold text-md">Perbarui Alamat</span>
+                </UButton>
+              </template>
               <UButton
                 color="success"
                 variant="outline"
@@ -122,13 +135,17 @@
 <script lang="ts" setup>
 import * as z from 'zod'
 import type { FormSubmitEvent } from '@nuxt/ui'
-import { fetchUserAddress, insertUserAddress } from '~~/utils/apiRepo'
+import { fetchUserAddress, insertUserAddress, updateUserAddress } from '~~/utils/apiRepo'
 
+const editMode = ref(false)
 const addressStore = useAddressStore()
+const toast = useToast()
+
 const { isGuestAddress, openModalInputAddress, provinceList } = storeToRefs(addressStore)
 const authStore = useAuthStore()
 const { isLoggedIn, userGuid } = storeToRefs(authStore)
 const formState = reactive<Partial<Schema>>({
+  id: undefined,
   firstName: undefined,
   lastName: undefined,
   province: undefined,
@@ -141,6 +158,7 @@ const formState = reactive<Partial<Schema>>({
   email: undefined,
 })
 const schema = z.object({
+  id: z.number().optional(),
   firstName: z.string("Nama depan harus diisi").min(1, "Nama depan harus diisi"),
   lastName: z.string("Name belakang harus diisi").min(1, "Nama belakang harus diisi"),
   province: z.string("Provinsi harus diisi").min(1, "Provinsi harus diisi"),
@@ -161,9 +179,14 @@ const {
   data: dataInsertAddress, 
   status: statusInsertAddress } = insertUserAddress(formState)
 
+const {
+  execute: executeUpdateUserAddress, // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  data: dataUpdateAddress, 
+  status: statusUpdateAddress } = updateUserAddress(formState, userGuid.value) 
+
 const { 
   execute: executeFetchUserAddress,
-  data: dataFetchUserAddress, // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  data: dataFetchUserAddress,  
   status: statusFetchUserAddress } = fetchUserAddress(userGuid.value, false)
 
 const getCityList = computed<City[]>(()=>{
@@ -191,16 +214,6 @@ const getVillageList = computed<Village[]>(()=>{
   return []
 })
 
-// function reloadCityList() {
-//   const cities = getCityList.value
-// }
-// function reloadDistrictList() {
-//   const districts = getDistrictList.value
-// }
-// function reloadVillageList() {
-//   const villages = getVillageList.value
-// }
-
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   if (!isLoggedIn.value) {
     isGuestAddress.value = true
@@ -210,19 +223,47 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     try {
       await executeInsertUserAddress()
       if (statusInsertAddress.value === 'success') {
-        await executeFetchUserAddress()
-        if (dataFetchUserAddress.value?.data) {
-          addressStore.setUserAddressList(dataFetchUserAddress.value.data)
-        }
-        // this.resetFormData()
+        await renewAddressList()
+        openModalInputAddress.value = false
+        resetFormData()
       }
     } catch (error) {
       console.log(error);
     }
   }
-  openModalInputAddress.value = false
+  
 }
 
+async function onSubmitEdit() {
+  if (!isLoggedIn.value) return
+  try {
+    await executeUpdateUserAddress()
+    if (statusUpdateAddress.value === 'success') {
+      await renewAddressList()
+    }
+    editMode.value = false
+    openModalInputAddress.value = false
+    toast.add({
+      title: 'Alamat Berhasil Diperbarui',
+      description: 'Alamat pengguna berhasil diperbarui.',
+    })
+  } catch (error) {
+    console.log(error);
+    toast.add({
+      title: 'Alamat Gagal Diperbarui',
+      description: 'Alamat pengguna gagal diperbarui.',
+    })
+  }
+  
+}
+
+async function renewAddressList () {
+  if (!isLoggedIn.value) return
+  await executeFetchUserAddress()
+  if (statusFetchUserAddress.value === 'success' && dataFetchUserAddress.value?.data) {
+    addressStore.setUserAddressList(dataFetchUserAddress.value.data)
+  }
+}
 watch(
   () => formState.province,
   () => {
@@ -274,7 +315,9 @@ function resetFormData() {
 }
 
 async function setFieldsValue (address: Address) {
+  editMode.value = true
   console.log('setFieldsValue', address);
+  formState.id = address.id
   formState.firstName = address.firstName // 1
   formState.lastName = address.lastName // 2
   formState.province = address.province // 3
@@ -307,6 +350,7 @@ async function setFieldsValue (address: Address) {
 }
 
 function handleClose() {
+  editMode.value = false
   resetFormData()
   openModalInputAddress.value = false
 }

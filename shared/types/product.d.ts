@@ -22,7 +22,7 @@ interface KdpProductDetail {
   modifiedAt: string
   isProductVoucher: boolean
   isProductVoucherAvailable: boolean
-  variants: Array<Variants> | null
+  variants: Variant[] | null
   //unknown??
   membershipPlanId: number
   //baru

@@ -1,15 +1,16 @@
-import { getActivePinia } from "pinia" 
+// import { getActivePinia } from "pinia" 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default defineNuxtRouteMiddleware( async (to, from) => {
   if (import.meta.client) return
+  const nuxtApp = useNuxtApp()
+
   const { SESSION_DOMAIN } = useRuntimeConfig().public
   const cookieOptions = { domain: SESSION_DOMAIN }
 
-  const pinia = getActivePinia()
-  const authStore = useAuthStore(pinia)
+  const authStore = useAuthStore(nuxtApp.$pinia)
   const { isLoggedIn } = storeToRefs(authStore)
 
-  const nuxtApp = useNuxtApp()
+  
   const cookieToken = useCookie('kompas._token', cookieOptions)
   const cookieKantormu = useCookie('kantormu', cookieOptions)
   const cookieRefresh = useCookie('kompas._token_refresh', cookieOptions)

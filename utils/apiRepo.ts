@@ -20,8 +20,8 @@ TODO IMPROVEMENT, separate api repository for each module, example:
  */
 
 export function fetchUserAddress(userGuid: string, cached = true) {
-  const cachedKey = `user-address-${userGuid}-${new Date().getTime()}`
-  const defaultKey = `user-address-${userGuid}`
+  const cachedKey = computed(() => `user-address-${userGuid}-${new Date().getTime()}`)
+  const defaultKey = computed(() => `user-address-${userGuid}`)
   return useAsyncData<ApiResponse<Address[], null>>(
     `${cached ? defaultKey : cachedKey}`,
     () => useNuxtApp().$apiOrder(`/user-address`),
@@ -47,7 +47,7 @@ export function insertUserAddress(payload: Partial<Address>) {
   )
 }
 
-export function updateUserAddress(address: Address, userGuid: string) {
+export function updateUserAddress(address: Partial<Address>, userGuid: string) {
   return useAsyncData<ApiResponse<Address, null>>(
     `update-user-address-${userGuid}-${new Date().getTime()}`,
     () => {

@@ -65,7 +65,7 @@ export const useAddressStore = defineStore('address', {
     isShippingAddressInvalid(state): boolean {
       if (!state.detailProduct) return false
       const variants = state.detailProduct.variants
-      if (variants.length === 0) return false
+      if (!variants) return false
       const foundOne = variants.some(variant => variant.area === this.getCurrentArea)
       return foundOne ?? false
     },

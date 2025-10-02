@@ -36,7 +36,7 @@
           Paket langganan ini hanya berlaku untuk pengiriman wilayah 
           <strong>{{ getValidAreaInfo }}</strong>.
 
-          Silahkan <span class="cursor-pointer font-bold underline" @click="handleModalInputAddress">ubah alamat pengiriman</span> ke wilayah {{ getValidAreaInfo }}
+          Silahkan <span class="cursor-pointer font-bold underline" @click="handleModalAddressList">ubah alamat pengiriman</span> ke wilayah {{ getValidAreaInfo }}
           atau ganti ke 
           <span class="cursor-pointer font-bold underline" @click="redirectToBerlangganan">paket lainnya</span>.
         </span>
@@ -56,16 +56,19 @@
 import { fetchAddressProvinces } from '~~/utils/apiRepo';
 
 const addressStore = useAddressStore()
-const { userAddressList, openModalInputAddress, getDefaultAddress, getValidAreaInfo, isShippingAddressInvalid } = storeToRefs(addressStore)
+const { userAddressList, openModalInputAddress, openModalListAddress, getDefaultAddress, getValidAreaInfo, isShippingAddressInvalid } = storeToRefs(addressStore)
 
 function redirectToBerlangganan () {
   const { KOMPAS_BERLANGGANAN_HOST } = useRuntimeConfig().public
   window.open(KOMPAS_BERLANGGANAN_HOST, '_blank')
 }
 
+function handleModalAddressList () {
+  openModalListAddress.value = true
+}
+
 function handleModalInputAddress () {
   openModalInputAddress.value = true
-  
 }
 const { data:provinces,
   execute:executeFetchAddressProvinces,

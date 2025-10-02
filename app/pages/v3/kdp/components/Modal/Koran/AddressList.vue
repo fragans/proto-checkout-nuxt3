@@ -61,6 +61,7 @@ const editAddressForms = ref<typeof AddressForm>()
 
 const { execute: executeFetchUserAddress, data: dataFetchUserAddress } = fetchUserAddress(userGuid.value)
 
+
 function handleDelete(id: number | undefined) {
   console.log({id});  
 }
@@ -75,7 +76,6 @@ async function handleModalEdit (index: number) {
   editAddressForms.value.setFieldsValue(selectedAdressData)
 }
 async function setAddressToDefault (id: number | undefined) {
-  console.log('setAddressToDefault');
   
   if (!isLoggedIn.value && !id) return
   const { 
@@ -92,7 +92,7 @@ async function setAddressToDefault (id: number | undefined) {
       openModalListAddress.value = false
       toast.add({
         title: 'Alamat Utama Diperbarui',
-        description: 'Alamat utama pengguna berhasil diperbarui dan akan digunakan sebagai alamat pengiriman default.',
+        description: 'Alamat utama pengguna berhasil diperbarui dan akan digunakan sebagai alamat pengiriman utama.',
       })
     }
   }
