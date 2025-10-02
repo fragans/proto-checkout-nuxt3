@@ -69,6 +69,10 @@ export function setAddressDefault(id: number, guid: string) {
 
 
 export function fetchDetailProduct(productId: string) {
+  // this is the main api to this site
+  // so we want the data to be fetched on server side
+  // product api will be fetched after membership api
+  // in-case product api has personalised result based on member/guest
   return useAsyncData<ApiResponse<KdpProductDetail, null>>(
     `detail-product-${productId}`,
      () => useNuxtApp().$apiOrder(`/product?id=${productId}`),

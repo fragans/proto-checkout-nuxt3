@@ -53,7 +53,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   async function setAsGuest() {
     console.log('setAsGuest');
     cookieRefresh.value = KOMPAS_REFRESH_GUEST
-    // await fetchAccessToken(KOMPAS_REFRESH_GUEST as string)
+    await fetchAccessToken(KOMPAS_REFRESH_GUEST as string)
     authStore.setUserGuid('GUEST')
     authStore.setRefreshToken(KOMPAS_REFRESH_GUEST)
     authStore.setLoggedIn(false)

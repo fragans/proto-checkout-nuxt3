@@ -4,14 +4,13 @@ import { fetchDetailProduct } from '~~/utils/apiRepo';
 
 export default defineNuxtRouteMiddleware(async (to, from) => {
     if (import.meta.client) return
-
-    const $route = useRoute()
+    if (!to.query.productId) return
 
     const pinia = getActivePinia()
     const checkoutStore = useCheckoutStore(pinia)
     const addressStore = useAddressStore(pinia)
 
-    const { execute: executeFetchDetailProduct, data: dataDetailProduct } = fetchDetailProduct($route.query.productId as string)
+    const { execute: executeFetchDetailProduct, data: dataDetailProduct } = fetchDetailProduct(to.query.productId as string)
     await executeFetchDetailProduct()
     if (dataDetailProduct.value?.data) {
       checkoutStore.setDetailProduct(dataDetailProduct.value?.data)

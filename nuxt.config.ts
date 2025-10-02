@@ -5,7 +5,13 @@ export default defineNuxtConfig({
   css: [
     "~/assets/styles/tailwind.css"
   ],
-  devtools: { enabled: true },
+  devtools: {
+    enabled: true,
+
+    timeline: {
+      enabled: true,
+    },
+  },
   devServer: { host: '0.0.0.0', port: 3000 },
   fonts: {
     priority: ['google'],
