@@ -1,29 +1,38 @@
-export interface Variant {
-  id: number;
+interface Variant {
   area: number;
-  price: number;
-  shippingPrice: number;
-}
-
-export interface KdpProductDetail {
   id: number;
-  author: string;
-  title: string;
+  normalPrice: number;
   price: number;
   shippingPrice: number;
-  duration: number;
-  durationType: number;
-  createdAt: string;
-  modifiedAt: string;
-  isProductVoucher: boolean;
-  isProductVoucherAvailable: boolean;
-  isPartnerSubs: boolean;
-  isKoran: boolean;
-  isVariant: boolean;
-  variants: Variant[] | null;
 }
 
-export interface Coupons {
+interface KdpProductDetail {
+  id: number
+  author: string
+  title: string
+  price: number
+  shippingPrice: number
+  duration: number // satuan berdasarkan durationType
+  durationType: number // 1 = hour 2 = day 3 = month 4 = year
+  isKoran: boolean
+  isPartnerSubs: boolean
+  isVariant: boolean
+  productVariantPrice: null
+  createdAt: string
+  modifiedAt: string
+  isProductVoucher: boolean
+  isProductVoucherAvailable: boolean
+  variants: Variant[] | null
+  //unknown??
+  membershipPlanId: number
+  //baru
+  oneTimePrice: number
+  introPrice: number
+  introDuration: number
+  autorenPrice: number
+}
+
+interface Coupons {
   id: number;
   code: string;
   description: string;

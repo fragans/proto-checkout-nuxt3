@@ -9,14 +9,13 @@
  * api fetch that uses credentials
  * when return 401 it will auto retry with new jwt from refresh()
  */
-// import type { Pinia } from 'pinia'
-import { storeToRefs, getActivePinia } from 'pinia'
+import type { Pinia } from 'pinia'
+import { storeToRefs } from 'pinia'
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+ 
 export default defineNuxtPlugin(({ $pinia }) => {
   const {
     SESSION_DOMAIN,
-    API_BASE_ACCOUNT,
     KOMPAS_REFRESH_GUEST,
   } = useRuntimeConfig().public
 
@@ -28,10 +27,12 @@ export default defineNuxtPlugin(({ $pinia }) => {
   const baseAccount = '/api/account'
   const baseOrder = '/api/order'
   
-  const _pinia = getActivePinia()
+  // const _pinia = getActivePinia()
+  // console.log('_pinia', _pinia);
+  const _pinia = $pinia as Pinia
   const authStore = useAuthStore(_pinia)
   const { accessToken, refreshToken, isLoggedIn } = storeToRefs(authStore)
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
   const cookieRefresh = useCookie<string>('kompas._token_refresh', cookieOptions) 
   const cookieToken = useCookie<string>('kompas._token', cookieOptions)
   let refreshTokenPromise: Promise<ApiAuthRefreshToken | null> | null = null
@@ -39,7 +40,7 @@ export default defineNuxtPlugin(({ $pinia }) => {
   async function refresh() {
     // Ambil token refresh dengan sesuai skenario
     const pickRefreshToken = isLoggedIn.value && refreshToken.value ? refreshToken.value : KOMPAS_REFRESH_GUEST
-    if (pickRefreshToken === KOMPAS_REFRESH_GUEST) useCookie('kompas._token_refresh', cookieOptions).value = KOMPAS_REFRESH_GUEST
+    if (pickRefreshToken === KOMPAS_REFRESH_GUEST) cookieRefresh.value = KOMPAS_REFRESH_GUEST
 
     if (!refreshTokenPromise) {
       refreshTokenPromise = (async () => {
@@ -78,24 +79,20 @@ export default defineNuxtPlugin(({ $pinia }) => {
   }
   /**
 	 * this custom api client will handle
-	 * - authenticated req with jwt with API_BASE
-	 * - cached req then handles when 401 occurs
-	 * - retry request will only hapend once
+   * - automatic token refresh
+   * - automatic retry once
+	 * - add authorization header from pinia store
+   * - cannot use useCookie inside onRequest or onResponseError
 	 */
   function createApiClient(baseURL: string) {
     return $fetch.create({
       baseURL,
       retry: 1,
       retryStatusCodes: [401],
-       
       onRequest({ options }) {
         const headers = new Headers(options.headers || {})
-        headers.set('Authorization', `Bearer ${useCookie('kompas._token').value}`)
+        headers.set('Authorization', `Bearer ${cookieToken.value}`)
         options.headers = headers
-      },
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      onResponse: async ({ response, options }) => {
-
       },
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       onResponseError: async ({ response, options, error }) => {
@@ -113,7 +110,7 @@ export default defineNuxtPlugin(({ $pinia }) => {
           catch (error) {
             options.retry = false
             console.error('Token refresh failed:', error)
-            console.log('dont navigateTo', `${API_BASE_ACCOUNT}/logout`)
+            // console.log('dont navigateTo', `${API_BASE_ACCOUNT}/logout`)
             // await navigateTo(`${API_BASE_ACCOUNT}/logout`, {
             //   external: true,
             // })
@@ -123,6 +120,10 @@ export default defineNuxtPlugin(({ $pinia }) => {
 
         if (response.status === 410) {
           throw createError({ statusCode: 410, fatal: true })
+        }
+        else if (response.status === 403) {
+          // authStore.setLoggedIn(false)
+          // useCookie('kompas._token_refresh', cookieOptions).value = ''
         }
         else if (response.status === 404) {
           // const msg = `[APICALL ${response.status}] - ${response.url}`
@@ -140,6 +141,8 @@ export default defineNuxtPlugin(({ $pinia }) => {
           throw createError({ statusCode: response.status, statusMessage: response.statusText, fatal: true })
         }
       },
+      
+      
     })
   }
 

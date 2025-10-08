@@ -12,16 +12,91 @@ export const useAddressStore = defineStore('address', {
     isInvoice: false,
     dateKoran: '',
     isProductKoran: false,
-    detailProduct: {} as KdpProductDetail,
     addressId: 0,
     fakturPajak: {
       npwp: '',
       name: '',
       address: ''
     } as IFakturPajak,
-    checkoutEmail: ''
+    checkoutEmail: '',
+    openModalInputAddress: false,
+    openModalListAddress: false,
+    openModalEditAddress: false,
+    provinceList: [] as Province[],
+    isGuestAddress: false,
+    // ini knp nebeng di store address?
+    detailProduct: null as null | KdpProductDetail
   }),
   getters: {
+    getCurrentArea(state): number {
+      if (state.userAddressList.length === 0) return 0
+      const userProvince = this.getDefaultAddress?.province
+      if (!userProvince) return 0
+      const jawaBaliProvinces = [
+        'Banten',
+        'DKI Jakarta',
+        'Jawa Barat',
+        'Jawa Tengah',
+        'Daerah Istimewa Yogyakarta',
+        'Jawa Timur',
+        'Bali'
+      ]
+      
+      if (jawaBaliProvinces.includes(userProvince)) {
+        this.isJawaBali = true
+      } else {
+        this.isJawaBali = false
+      }
+      const isJawa = jawaBaliProvinces.slice(0, -1).includes(userProvince)
+      const isBali = userProvince === 'Bali'
+
+      return isJawa ? 1 : isBali ? 2 : 3
+    },
+    getDefaultAddress(state): Address | undefined {
+      const [first] = state.userAddressList
+      if (state.userAddressList.length > 0 && state.isGuestAddress) {
+        return first  
+      }
+      const userAddress = state.userAddressList.find(item => item.isDefault === true)
+
+      if (!userAddress) return first
+      return userAddress  
+    },
+    isShippingAddressInvalid(state): boolean {
+      if (!state.detailProduct) return false
+      const variants = state.detailProduct.variants
+      if (!variants) return false
+      const foundOne = variants.some(variant => variant.area === this.getCurrentArea)
+      return foundOne ?? false
+    },
+    isAddressFull (state): boolean {
+      return state.userAddressList.length >= 5
+    },
+    getValidAreaInfo (state): string {
+      if (!state.detailProduct?.variants) { return '' }
+
+      const areas = state.detailProduct.variants.map(variant => variant.area)
+
+      let validArea:string = ''
+      
+      if (areas.includes(1) && areas.includes(2) && areas.includes(3)) {
+        validArea = 'Pulau Jawa, Pulau Bali, Luar Pulau Jawa & Bali'
+      } else if (areas.includes(1) && areas.includes(2)) {
+        validArea = 'Pulau Jawa & Bali'
+      } else if (areas.includes(1) && areas.includes(3)) {
+        validArea = 'Pulau Jawa, Luar Pulau Jawa & Bali'
+      } else if (areas.includes(2) && areas.includes(3)) {
+        validArea = 'Pulau Bali, Luar Pulau Jawa & Bali'
+      } else if (areas.includes(1)) {
+        validArea = 'Pulau Jawa'
+      } else if (areas.includes(2)) {
+        validArea = 'Pulau Bali'
+      } else if (areas.includes(3)) {
+        validArea = 'Luar Pulau Jawa & Bali'
+      }
+
+      return validArea
+    }
   },
   actions: {
     reset() {
@@ -47,9 +122,10 @@ export const useAddressStore = defineStore('address', {
     setDetailProduct(payload: KdpProductDetail) {
       this.detailProduct = payload
     },
-    setProvince(payload: string) {
-      this.userProvince = payload
-
+    setProvinceList(payload: Province[]) {
+      this.provinceList = payload
+    },
+    handleProvinceChange(payload: string| undefined) {
       const jawaBaliProvinces = [
         'Banten',
         'DKI Jakarta',
@@ -59,28 +135,27 @@ export const useAddressStore = defineStore('address', {
         'Jawa Timur',
         'Bali'
       ]
-
+      if (!payload) {
+        this.isJawaBali = false
+        this.shippingCost = 0
+        return
+      }
+      
+      if (jawaBaliProvinces.includes(payload)) {
+        this.isJawaBali = true
+      } else {
+        this.isJawaBali = false
+      }
       const isJawa = jawaBaliProvinces.slice(0, -1).includes(payload)
       const isBali = payload === 'Bali'
 
       this.area = isJawa ? 1 : isBali ? 2 : 3
 
-      if (this.detailProduct.isVariant) {
+      if (this.detailProduct?.isVariant) {
         const variant = this.detailProduct.variants?.find(variant => variant.area === this.area)
         this.shippingCost = variant ? variant.shippingPrice : this.detailProduct.shippingPrice
       } else {
-        this.shippingCost = this.detailProduct.shippingPrice
-      }
-
-      if (this.userProvince !== '') {
-        if (jawaBaliProvinces.includes(payload)) {
-          this.isJawaBali = true
-        } else {
-          this.isJawaBali = false
-        }
-      } else {
-        this.isJawaBali = false
-        this.shippingCost = 0
+        this.shippingCost = this.detailProduct?.shippingPrice ?? 0
       }
     },
     setShippingCost(payload: number) {
@@ -107,6 +182,38 @@ export const useAddressStore = defineStore('address', {
     },
     setCheckoutEmail(payload: string) {
       this.checkoutEmail = payload
+    },
+    getAddressString (addressObject: Address| undefined) {
+      if (!addressObject) return ''
+      const {
+        address: stringAddress,
+        village,
+        district,
+        city,
+        province,
+        postalCode
+      } = addressObject
+      return `${stringAddress}, ${village}, ${district}, ${city}, ${province}, ${postalCode}`
+    },
+    setValidArea (areas: number[]) {
+    let validArea = ''
+    if (areas.includes(1) && areas.includes(2) && areas.includes(3)) {
+      validArea = 'Pulau Jawa, Pulau Bali, Luar Pulau Jawa & Bali'
+    } else if (areas.includes(1) && areas.includes(2)) {
+      validArea = 'Pulau Jawa & Bali'
+    } else if (areas.includes(1) && areas.includes(3)) {
+      validArea = 'Pulau Jawa, Luar Pulau Jawa & Bali'
+    } else if (areas.includes(2) && areas.includes(3)) {
+      validArea = 'Pulau Bali, Luar Pulau Jawa & Bali'
+    } else if (areas.includes(1)) {
+      validArea = 'Pulau Jawa'
+    } else if (areas.includes(2)) {
+      validArea = 'Pulau Bali'
+    } else if (areas.includes(3)) {
+      validArea = 'Luar Pulau Jawa & Bali'
     }
+
+    return validArea
+  }
   }
 })

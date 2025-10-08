@@ -1,77 +1,28 @@
-/* purgecss start ignore */
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
-/* purgecss end ignore */
-@import 'tailwindcss/utilities';
+@import "tailwindcss";
+@import "~/assets/styles/theme.css";
+@import "@nuxt/ui";
 
-/* Adding Base Styles */
-/* base untuk tampilan mobile & tablet */
+/* :root {
+  color: @theme(--color-gray-600);
+  --ui-text: @theme(--color-gray-600);
+  --ui-bg: @theme(--color-white);
+  --background-color-default: var(--ui-bg);
+
+
+  --ui-text-dimmed: var(--ui-color-neutral-400);
+  --ui-text-muted: var(--ui-color-neutral-500);
+  --ui-text-toned: var(--ui-color-neutral-600);
+  --ui-text: var(--ui-color-neutral-700);
+  --ui-text-highlighted: var(--ui-color-neutral-900);
+  --ui-text-inverted: var(--color-white);
+  --ui-radius: 0.25rem;
+} */
+
+[data-reka-collapsible-content] {
+  --reka-collapsible-content-height: auto !important;
+}
 @layer base {
-    h1 {
-        @apply text-3xl;
-    }
-    h2 {
-        @apply text-2xl;
-    }
-    h3 {
-        font-size: 1.375rem;
-        line-height: 2rem;
-    }
-    h4 {
-        @apply text-xl;
-    }
-    h5 {
-        @apply text-lg;
-    }
-    h6 {
-        @apply text-base;
-    }
-}
-
-/* untuk tampilan desktop */
-@screen md {
-    h1 {
-        @apply text-5xl;
-    }
-    h2 {
-        @apply text-4xl;
-    }
-    h3 {
-        @apply text-3xl;
-    }
-    h4 {
-        @apply text-2xl;
-    }
-    h5 {
-        @apply text-xl;
-    }
-    h6 {
-        @apply text-base;
-    }
-}
-
-/* Custom css content */
-.content {
-    & p {
-      @apply font-serif;
-      @apply mb-4;
-      @apply text-grey-60;
-    }
-  
-    & ol {
-      @apply list-decimal;
-      @apply list-inside;
-    }
-  
-    & ul {
-      @apply list-disc;
-      @apply list-inside;
-    }
-  
-    & li {
-      @apply mb-2;
-      & img {
-        @apply inline-block;
-      }
-    }
+  body {
+    color: var(--color-brand-1);
   }
+}

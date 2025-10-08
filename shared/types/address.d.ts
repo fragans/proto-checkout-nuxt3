@@ -1,6 +1,7 @@
 interface Address {
   id?: number;
   firstName: string;
+  lastName: string;
   email: string;
   phoneNumber: string;
   address: string;
@@ -14,26 +15,22 @@ interface Address {
 }
 
 interface Province {
-  id: string;
-  name: string;
+  province: string;
   cities: City[];
 }
 
 interface City {
-  id: string;
-  name: string;
-  districts: District[];
+  city: string
+  districts: District[]
 }
 
 interface District {
-  id: string;
-  name: string;
-  villages: Village[];
+  district: string
+  villages: Village[]
 }
 
 interface Village {
-  id: string;
-  name: string;
+  village: string
 }
 
 interface IFakturPajak {
